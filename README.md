@@ -13,7 +13,8 @@ Team Members:
 * I'm Kiet.
 - Person 3 Phuong lttphuong7@gmail.com
 * Hi, I'm Phuong.
-- Person 4
+- Person 4 Nam Anh nle48@my.bcit.ca
+* Hi, I'm Nam Anh.
 
 
 	
