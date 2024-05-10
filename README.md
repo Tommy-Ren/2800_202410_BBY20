@@ -9,8 +9,8 @@ Team Name: BBY-20
 Team Members: 
 - Person 1 Tommy tianze823242895@gmail.com
     Hi, I am Tommy.
-- Person 2
-
+- Person 2 Kiet ngkiet1109@gmail.com
+    I'm Kiet.
 - Person 3
 
 - Person 4
