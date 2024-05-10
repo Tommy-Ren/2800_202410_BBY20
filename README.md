@@ -8,12 +8,13 @@ FreshStock
 Team Name: BBY-20
 Team Members: 
 - Person 1 Tommy tianze823242895@gmail.com
-    Hi, I am Tommy.
+* Hi, I am Tommy.
 - Person 2 Kiet ngkiet1109@gmail.com
-    I'm Kiet.
-- Person 3
-
-- Person 4
+* I'm Kiet.
+- Person 3 Phuong lttphuong7@gmail.com
+* Hi, I'm Phuong.
+- Person 4 Nam Anh nle48@my.bcit.ca
+* Hi, I'm Nam Anh.
 
 
 	
