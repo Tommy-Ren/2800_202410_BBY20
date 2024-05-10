@@ -11,8 +11,8 @@ Team Members:
     Hi, I am Tommy.
 - Person 2 Kiet ngkiet1109@gmail.com
     I'm Kiet.
-- Person 3
-
+- Person 3 lttphuong7@gmail.com
+    Hi, I'm Phuong.
 - Person 4
 
 
