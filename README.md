@@ -16,9 +16,17 @@ Team Members:
 - Person 4 Nam Anh nle48@my.bcit.ca
 * Hi, I'm Nam Anh.
 
-
+## 3. Basic Setup (Test Locally)
+1. npm init (all defaults are fine)
+2. npm install
+3. npm install express
+4. npm install bcrypt
+5. npm install express-session
+6. npm install connect-mongo
+7. npm install dotenv
+8. npm install ejs
 	
-## 3. Technologies and Resources Used
+## 4. Technologies and Resources Used
 List technologies (with version numbers), API's, icons, fonts, images, media or data sources, and other resources that were used.
 * HTML, CSS, JavaScript
 * Bootstrap 5.0 (Frontend library)
@@ -35,7 +43,7 @@ List technologies (with version numbers), API's, icons, fonts, images, media or 
 
 
 
-## 4. Complete setup/installion/usage
+## 5. Complete setup/installion/usage
 State what a user needs to do when they come to your project.  How do others start using your code or application?
 Here are the steps ...
 * 1 - If users are using Savebites for the first time, they will need to click "Start" then register for a new acocunt following the standard Google sign-in interface
@@ -45,7 +53,7 @@ Here are the steps ...
 
 
 
-## 5. Known Bugs and Limitations
+## 6. Known Bugs and Limitations
 Here are some known bugs:
 * When a user tries to take a picture with the camera on user's device, the file isn't being saved in the firebase, so it is not showing in the uploaded post. (Camera button is hidden now)
 * Map does not default to the closest Safeway, Save-On-Foods, etc.
@@ -53,7 +61,7 @@ Here are some known bugs:
 
 
 
-## 6. Features for Future
+## 7. Features for Future
 What we'd like to build in the future:
 * Fix mobile camera so users can upload a photo they directly with the phone camera
 * Make Map more interactive by allowing it to add a location via touch as opposed to text only.
@@ -63,4 +71,4 @@ What we'd like to build in the future:
 * Add OCR features so fields are automatically filled in the Upload Posts page.
 
 	
-## 7. Contents of Folder
+## 8. Contents of Folder
