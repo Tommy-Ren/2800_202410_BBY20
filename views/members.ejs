@@ -1,0 +1,13 @@
+<%- include("templates/header") %> 
+    <div class="container">
+        <h1>Cats!</h1>
+        <div class="d-flex flex-wrap">
+            <% images.forEach(function(image, index) { %>
+                <div class="image-container mt-4">
+                    <img src="<%= image %>" alt="cat" class="img-fluid">
+                    <div class="image-caption d-flex justify-content-center">Cat <%= index + 1 %></div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+<%- include("templates/footer") %> 
