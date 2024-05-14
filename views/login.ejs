@@ -1,0 +1,23 @@
+<%- include("templates/header") %>
+    <div class="container">
+        <main class="form-signin w-100 m-auto">
+            <form action="/loginSubmit" method="post">
+                <h1 class="h3 mb-3 fw-normal">Login</h1>
+                <div class="form-floating mt-2">
+                    <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email">
+                    <label for="email">Email:</label>
+                </div>
+                <div class="form-floating mt-2">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
+                    <label for="password">Password:</label> 
+                </div>
+                <button class="btn btn-primary w-100 py-2 mt-4" type="submit">Submit</button>
+            </form>
+            
+            <div class="mt-4">
+                <p style="color: red;"><%= message || '' %></p>
+                <p><a class="link-offset-1" href="/signup">Create an account</a></p>
+            </div>
+        </main>
+    </div>
+<%- include("templates/footer") %>
