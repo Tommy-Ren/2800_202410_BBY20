@@ -1,0 +1,15 @@
+<li>
+    <div class="d-flex justify-content-between mb-3">
+        <%= user.name %> (<%= user.user_type %>)
+        <div>
+            <form action="/promote" method="POST" style="display: inline;">
+                <input name="email" type="hidden" value="<%= user.email %>">
+                <button type="submit" class="btn btn-success">Promote to Admin</button>
+            </form>
+            <form action="/demote" method="POST" style="display: inline;">
+                <input name="email" type="hidden" value="<%= user.email %>">
+                <button type="submit" class="btn btn-danger">Demote to User</button>
+            </form>
+        </div>
+    </div>
+</li>

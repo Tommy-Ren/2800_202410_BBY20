@@ -1,0 +1,10 @@
+<%- include("templates/header", {authenticated}) %>
+    <div class="container mt-3">
+        <h1>Hello, <%= authenticated.name %></h1><br>
+        <div class="text-center">
+            <% gifs.forEach(gif=> { %>
+                <img src="/<%= gif %>" style="width: 250px;" class="img-fluid rounded mb-3 ms-3">
+                <% }) %>
+        </div>
+    </div>
+    <%- include("templates/footer") %>

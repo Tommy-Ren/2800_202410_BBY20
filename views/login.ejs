@@ -1,0 +1,17 @@
+<%- include("templates/header") %>
+    <div class="container mt-3">
+        <h1>Log in</h1>
+        <form action="/loggingin" method="post">
+            <div class="mb-3">
+                <label for="emailLable" class="form-label">Email address</label>
+                <input name="email" type="email" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="passwordLable" class="form-label">Password</label>
+                <input name="password" type="password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary mb-3">Log in</button>
+        </form>
+        <div>Don't have an account? <a href='/signup'>Sign up</a></div>
+    </div>
+<%- include("templates/footer") %>

@@ -1,0 +1,12 @@
+<%- include("templates/header", {authenticated}) %>
+    <div class="container mt-3 ms-3">
+        <% if (authenticated) { %>
+            <h1>Hello, <%= name %>!</h1>
+            <a href="/members"><button type="button" class="btn btn-primary mb-3">Members Area</button></a><br>
+            <a href="/logout"><button type="button" class="btn btn-primary mb-3">Sign Out</button></a>
+        <% } else { %>
+            <a href="/login"><button type="button" class="btn btn-primary my-3">Log In</button></a><br>
+            <a href="/signup"><button type="button" class="btn btn-primary mb-3">Sign Up</button></a>
+        <% } %>
+    </div>
+<%- include("templates/footer") %>
