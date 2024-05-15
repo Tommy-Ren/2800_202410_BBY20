@@ -25,6 +25,8 @@ Team Members:
 6. npm install connect-mongo
 7. npm install dotenv
 8. npm install ejs
+9. npm install joi
+10. npm install mongodb
 	
 ## 4. Technologies and Resources Used
 List technologies (with version numbers), API's, icons, fonts, images, media or data sources, and other resources that were used.
