@@ -1,4 +1,4 @@
-
+require("./utils.js");
 
 require('dotenv').config();
 const express = require('express');
@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 const fs = require('fs');
 const saltRounds = 12;
 
-const port =  3002;
+const port = process.env.PORT || 3000;
 
 const app = express();
 
