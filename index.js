@@ -92,7 +92,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/signup', (req, res) => {
-    res.render("signup");
+    res.render("signup", {css: "/css/login.css"});
 })
 
 app.post('/signupSubmit', async (req, res) => {
@@ -127,7 +127,7 @@ app.post('/signupSubmit', async (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.render("login");
+    res.render("login", { css: "/css/login.css" });
 });
 
 app.post('/loggingin', async (req, res) => {
