@@ -1,21 +1,19 @@
-
-require("./utils.js");
-
-// mongodb+srv://tom:710922@firstcluster.odf49fu.mongodb.net/
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
 const saltRounds = 12;
 
-const port = process.env.PORT || 3000;
+const port =  3000;
 
 const app = express();
 
 const Joi = require("joi");
 
-const expireTime = 24 * 60 * 60 * 1000; //expires after 1 day  (hours * minutes * seconds * millis)
+
+const expireTime = 60 * 60 * 1000; //expires after 1 hour  (hours * minutes * seconds * millis)
 
 /* secret information section */
 const mongodb_host = process.env.MONGODB_HOST;
@@ -27,17 +25,17 @@ const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 /* END secret section */
 
-var { database } = include('databaseConnection');
+// to use mongoDB -> access db
+const mongoClient = require("mongodb").MongoClient;
 
-const userCollection = database.db(mongodb_database).collection('comp2537-assignment2-users');
+var database = new mongoClient(`mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/`);
+
+const userCollection = database.db(mongodb_database).collection('users');
 
 app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({ extended: false }));
-
-// serve static files from the 'public' directory
 app.use(express.static(__dirname + "/public"));
-
 var mongoStore = MongoStore.create({
     mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/sessions`,
     crypto: {
@@ -47,7 +45,7 @@ var mongoStore = MongoStore.create({
 
 app.use(session({
     secret: node_session_secret,
-    store: mongoStore,
+    store: mongoStore, //default is memory store 
     saveUninitialized: false,
     resave: true
 }
@@ -89,7 +87,7 @@ function adminAuthorization(req, res, next) {
 
 app.get('/', (req, res) => {
     var authorized = isValidSession(req);
-    res.render("index", { authorized, username: req.session.username, currentPage: "home" });
+    res.render("homePage", {fridgeName: "Fridge #1", css: "/css/homePage.css"});
 });
 
 app.get('/nosql-injection', async (req, res) => {
