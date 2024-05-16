@@ -1,23 +1,17 @@
 <%- include("templates/header") %>
-    <div class="container">
-        <main class="form-signin w-100 m-auto">
-            <form action="/loginSubmit" method="post">
-                <h1 class="h3 mb-3 fw-normal">Login</h1>
-                <div class="form-floating mt-2">
-                    <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email">
-                    <label for="email">Email:</label>
-                </div>
-                <div class="form-floating mt-2">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
-                    <label for="password">Password:</label> 
-                </div>
-                <button class="btn btn-primary w-100 py-2 mt-4" type="submit">Submit</button>
-            </form>
-            
-            <div class="mt-4">
-                <p style="color: red;"><%= message || '' %></p>
-                <p><a class="link-offset-1" href="/signup">Create an account</a></p>
+    <div class="container mt-3">
+        <h1>Log in</h1>
+        <form action="/loggingin" method="post">
+            <div class="mb-3">
+                <label for="emailLable" class="form-label">Email address</label>
+                <input name="email" type="email" class="form-control">
             </div>
-        </main>
+            <div class="mb-3">
+                <label for="passwordLable" class="form-label">Password</label>
+                <input name="password" type="password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary mb-3">Log in</button>
+        </form>
+        <div>Don't have an account? <a href='/signup'>Sign up</a></div>
     </div>
 <%- include("templates/footer") %>

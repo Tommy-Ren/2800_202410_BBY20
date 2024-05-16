@@ -1,13 +1,10 @@
-<%- include("templates/header") %> 
-    <div class="container">
-        <h1>Cats!</h1>
-        <div class="d-flex flex-wrap">
-            <% images.forEach(function(image, index) { %>
-                <div class="image-container mt-4">
-                    <img src="<%= image %>" alt="cat" class="img-fluid">
-                    <div class="image-caption d-flex justify-content-center">Cat <%= index + 1 %></div>
-                </div>
-            <% }); %>
+<%- include("templates/header", {authenticated}) %>
+    <div class="container mt-3">
+        <h1>Hello, <%= authenticated.name %></h1><br>
+        <div class="text-center">
+            <% gifs.forEach(gif=> { %>
+                <img src="/<%= gif %>" style="width: 250px;" class="img-fluid rounded mb-3 ms-3">
+                <% }) %>
         </div>
     </div>
-<%- include("templates/footer") %> 
+    <%- include("templates/footer") %>

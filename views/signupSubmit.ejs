@@ -1,9 +1,6 @@
 <%- include("templates/header") %>
-    <div class="container">
-        <div class="alert alert-danger" role="alert">
-            <%= errorMessage %>
-        </div>
-        <button class="btn btn-primary" onclick="window.location.href='/signup'">Try Again</button>
+    <div class="container mt-3">
+        <div class="mb-3"><%= error %></div>
+        <a href='/signup'>Try again</a>
     </div>
-
 <%- include("templates/footer") %>
