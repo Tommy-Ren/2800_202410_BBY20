@@ -91,6 +91,10 @@ function adminAuthorization(req, res, next) {
     }
 }
 
+app.get('/', (req, res) => {
+    res.render("index", { css: "/css/index.css" });
+});
+
 app.get('/homePage/:id', (req, res) => {
     const ID = req.params.id;
     var authorized = isValidSession(req);
