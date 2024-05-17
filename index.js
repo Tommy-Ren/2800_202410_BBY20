@@ -108,10 +108,10 @@ app.get('/home/:id', (req, res) => {
 });
 
 // =====list page page begins=====
-app.get('/listPage/:id', (req, res) => {
+app.get('/list/:id', (req, res) => {
     const ID = req.params.id;
     const ingredientArray = ['budweiser-6can.jpg', 'cadbury-chocolate-mini-egg.png', 'heinz-sauce-ketchup-500ml.png', 'nutella-1kg.png'];
-    res.render("listPage", {fridgeName: ID, css: "/css/listPage.css", ingredients: ingredientArray});
+    res.render("list", {fridgeName: ID, css: "/css/list.css", ingredients: ingredientArray});
 });
 
 // =====setting page begins=====
@@ -380,10 +380,10 @@ app.get('/home/:id', (req, res) => {
 });
 
 // =====List page begins=====
-app.get('/listPage/:id', (req, res) => {
+app.get('/list/:id', (req, res) => {
     const ID = req.params.id;
     const ingredientArray = ['budweiser-6can.jpg', 'cadbury-chocolate-mini-egg.png', 'heinz-sauce-ketchup-500ml.png', 'nutella-1kg.png'];
-    res.render("listPage", {fridgeName: ID, css: "/css/listPage.css", ingredients: ingredientArray});
+    res.render("list", {fridgeName: ID, css: "/css/list.css", ingredients: ingredientArray});
 });
 
 // =====Setting page begins=====
