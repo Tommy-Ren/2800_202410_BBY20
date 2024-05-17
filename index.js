@@ -91,9 +91,22 @@ app.get('/', (req, res) => {
     res.render("index", { authenticated: req.session.authenticated, name: req.session.authenticated?.name });
 });
 
+
+app.get('/waiting', (req,res) => {
+    res.render("waiting", {css: "/css/login.css"});
+});
+
 app.get('/signup', (req, res) => {
     res.render("signup", {css: "/css/login.css"});
 })
+
+app.get('/connectSuccess',(req,res) =>{
+    res.render("connectSuccess", {css: "/css/connectSuccess.css"});
+});
+
+app.get('/passwordReset', (req,res) => {
+    res.render("passwordReset", {css: "/css/passwordReset.css"});
+});
 
 app.post('/signupSubmit', async (req, res) => {
     const { name, email, password } = req.body;
