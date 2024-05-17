@@ -206,29 +206,7 @@ app.post("/refresh", sessionValidation, async (req, res) => {
     return;
 });
 
-app.post("/promote", async (req, res) => {
-    const { email } = req.body;
-    try {
-        await userCollection.updateOne({ email: email }, { $set: { user_type: "admin" } });
-        console.log(`User promoted: ${email}`);
-        res.redirect("/admin");
-    } catch (error) {
-        console.error("Error promoting user:", error);
-        res.status(500).send("Error promoting user");
-    }
-});
 
-app.post("/demote", async (req, res) => {
-    const { email } = req.body;
-    try {
-        await userCollection.updateOne({ email: email }, { $set: { user_type: "user" } });
-        console.log(`User demoted: ${email}`);
-        res.redirect("/admin");
-    } catch (error) {
-        console.error("Error demoting user:", error);
-        res.status(500).send("Error demoting user");
-    }
-});
 
 app.get("/forgetPassword", (req, res) => {
     res.render("forgetPassword", { css: "/css/login.css" });
