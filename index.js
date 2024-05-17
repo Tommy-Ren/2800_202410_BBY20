@@ -1,5 +1,3 @@
-require("./utils.js");
-
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
@@ -11,12 +9,11 @@ const ObjectId = require('mongodb').ObjectId;
 const nodemailer = require('nodemailer');
 const saltRounds = 12;
 
-const port = process.env.PORT || 3000;
+const port =  3000;
 
 const app = express();
 
 const Joi = require("joi");
-
 
 const expireTime = 60 * 60 * 1000; //expires after 1 hour  (hours * minutes * seconds * millis)
 
@@ -53,6 +50,7 @@ var mongoStore = MongoStore.create({
 
 app.use(session({
     secret: node_session_secret,
+    store: mongoStore, //default is memory store 
     store: mongoStore, //default is memory store 
     saveUninitialized: false,
     resave: true
@@ -93,8 +91,52 @@ function adminAuthorization(req, res, next) {
     }
 }
 
-app.get('/', (req, res) => {
-    res.render("index", { authenticated: req.session.authenticated, name: req.session.authenticated?.name });
+app.get('/homePage/:id', (req, res) => {
+    const ID = req.params.id;
+    var authorized = isValidSession(req);
+    res.render("homePage", {fridgeName: ID, css: "/css/homePage.css"});
+});
+
+app.get('/listPage/:id', (req, res) => {
+    const ID = req.params.id;
+    const ingredientArray = ['budweiser-6can.jpg', 'cadbury-chocolate-mini-egg.png', 'heinz-sauce-ketchup-500ml.png', 'nutella-1kg.png'];
+    res.render("listPage", {fridgeName: ID, css: "/css/listPage.css", ingredients: ingredientArray});
+});
+
+app.get('/setting', (req, res) => {
+    const fridges = ['1', '2', '3'];
+    const user = {name: "Kiet", email: "kietkiet1109@yahoo.com", password: "123", user_type: "user", phone: "778-809-9869"};
+    res.render("setting", {css: "/css/setting.css", fridgeList: fridges, user: user});
+});
+
+app.get('/nosql-injection', async (req, res) => {
+    var username = req.query.user;
+
+    if (!username) {
+        res.send(`<h3>no user provided - try /nosql-injection?user=name</h3> <h3>or /nosql-injection?user[$ne]=name</h3>`);
+        return;
+    }
+    console.log("user: " + username);
+
+    const schema = Joi.string().max(20).required();
+    const validationResult = schema.validate(username);
+
+    //If we didn't use Joi to validate and check for a valid URL parameter below
+    // we could run our userCollection.find and it would be possible to attack.
+    // A URL parameter of user[$ne]=name would get executed as a MongoDB command
+    // and may result in revealing information about all users or a successful
+    // login without knowing the correct password.
+    if (validationResult.error != null) {
+        console.log(validationResult.error);
+        res.send("<h1 style='color:darkred;'>A NoSQL injection attack was detected!!</h1>");
+        return;
+    }
+
+    const result = await userCollection.find({ username: username }).project({ username: 1, email: 1, password: 1, _id: 1, user_type: 1 }).toArray();
+
+    console.log(result);
+
+    res.send(`<h1>Hello, ${username}</h1>`);
 });
 
 app.get('/signup', (req, res) => {
