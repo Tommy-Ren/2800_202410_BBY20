@@ -192,7 +192,7 @@ app.post("/resetPassword", async (req, res) => {
             return;
         }
         const secret = jwt_secret + existingUser.password;
-        const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, secret, { expiresIn: '5m' });
+        const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, secret, { expiresIn: '100m' });
         const link = `http://localhost:${port}/resetPassword/${existingUser._id}/${token}`;
         
         var transporter = nodemailer.createTransport({
@@ -235,12 +235,16 @@ app.get("/resetPassword/:id/:token", async (req, res) => {
 
         if (!existingUser) {
             res.render("resetPassword", { error: "User not found" });
+           
+        //    res.render("resetPassword",{ error: "User not found" },{ css: "/css/resetPassword.css" } );
+         
             return;
         }
         const secret = jwt_secret + existingUser.password;
         try {
             const verify = jwt.verify(token, secret);
             res.render("resetPassword", { email: verify.email });
+            // res.render("resetPassword", { email: verify.email }, { css: "/css/resetPassword.css" });
         } catch (error) {
             console.error("Error verifying token:", error);
             res.status(500).send("Error verifying token");
@@ -253,6 +257,7 @@ app.get("/resetPassword/:id/:token", async (req, res) => {
     }
 })
 
+//when the user type in the new password
 app.post("/resetPassword/:id/:token", async (req, res) => {
     const { id, token } = req.params;
     const { password } = req.body;
@@ -262,6 +267,7 @@ app.post("/resetPassword/:id/:token", async (req, res) => {
 
         if (!existingUser) {
             res.render("resetPassword", { error: "User not found" });
+            // res.render("resetPassword", { error: "User not found" }, { css: "/css/resetPassword.css" } );
             return;
         }
         const secret = jwt_secret + existingUser.password;
