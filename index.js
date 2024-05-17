@@ -42,6 +42,8 @@ app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({ extended: false }));
 
+app.use(express.static(__dirname + "/public"));
+
 var mongoStore = MongoStore.create({
     mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/sessions`,
     crypto: {
@@ -73,44 +75,17 @@ function sessionValidation(req, res, next) {
     }
 }
 
-function isAdmin(req) {
-    if (req.session.user_type == 'admin') {
-        return true;
-    }
-    return false;
-}
-
-function adminAuthorization(req, res, next) {
-    if (!isAdmin(req)) {
-        res.status(403);
-        res.render("error", { authenticated: req.session.authenticated, statusCode: res.statusCode, error: "Access Forbidden!" });
-        return;
-    }
-    else {
-        next();
-    }
-}
-
+// =====logo page begins=====
 app.get('/', (req, res) => {
     res.render("index", { authenticated: req.session.authenticated, name: req.session.authenticated?.name });
 });
+// =====logo page ends=====
 
 
-app.get('/waiting', (req,res) => {
-    res.render("waiting", {css: "/css/login.css"});
-});
-
+// =====sign up page begins=====
 app.get('/signup', (req, res) => {
     res.render("signup", { css: "/css/login.css" });
 })
-
-app.get('/connectSuccess',(req,res) =>{
-    res.render("connectSuccess", {css: "/css/connectSuccess.css"});
-});
-
-app.get('/passwordReset', (req,res) => {
-    res.render("passwordReset", {css: "/css/passwordReset.css"});
-});
 
 app.post('/signupSubmit', async (req, res) => {
     const { name, email, password } = req.body;
@@ -142,7 +117,10 @@ app.post('/signupSubmit', async (req, res) => {
 
     res.redirect("/members");
 });
+// =====sign up page ends=====
 
+
+// =====login page begins=====
 app.get('/login', (req, res) => {
     res.render("login", { css: "/css/login.css" });
 });
@@ -181,36 +159,29 @@ app.post('/loggingin', async (req, res) => {
         return;
     }
 });
+// =====login page ends=====
 
-app.get("/members", sessionValidation, (req, res) => {
-    fs.readdir(__dirname + "/public", (err, files) => {
-        if (err) {
-            return res.status(500).send('Internal Server Error');
-        }
 
-        // Filter out non-gif files
-        const gifs = files.filter(file => file.endsWith('.gif'));
-        res.render("members", { authenticated: req.session.authenticated, gifs });
-    })
-})
 
-app.get("/admin", sessionValidation, adminAuthorization, async (req, res) => {
-    const users = await userCollection.find().toArray();
-    res.render("admin", { authenticated: req.session.authenticated, users });
-})
-
-app.post("/refresh", sessionValidation, async (req, res) => {
-    const result = await userCollection.find({ email: req.session.authenticated.email }).project({ user_type: 1 }).toArray();
-    req.session.user_type = result[0].user_type;
-    res.redirect("/");
-    return;
+// =====waiting page begins=====
+app.get('/waiting', (req,res) => {
+    res.render("waiting", {css: "/css/login.css"});
 });
+// =====waiting page ends=====
+
+
+// =====connectSuccess page begins=====
+app.get('/connectSuccess',(req,res) =>{
+    res.render("connectSuccess", {css: "/css/connectSuccess.css"});
+});
+// =====connectSuccess page ends=====
 
 
 
-app.get("/forgetPassword", (req, res) => {
-    res.render("forgetPassword", { css: "/css/login.css" });
-})
+// =====forgetPassword page begins=====
+app.get('/forgetPassword', (req,res) => {
+    res.render("forgetPassword", {css: "/css/login.css"});
+});
 
 app.post("/resetPassword", async (req, res) => {
     const { email } = req.body;
@@ -256,7 +227,6 @@ app.post("/resetPassword", async (req, res) => {
         return;
     }
 })
-
 
 app.get("/resetPassword/:id/:token", async (req, res) => {
     const { id, token } = req.params;
@@ -311,7 +281,18 @@ app.post("/resetPassword/:id/:token", async (req, res) => {
         return;
     }
 })
+// =====forgetPassword page ends=====
 
+
+
+app.post("/refresh", sessionValidation, async (req, res) => {
+    const result = await userCollection.find({ email: req.session.authenticated.email }).project({ user_type: 1 }).toArray();
+    req.session.user_type = result[0].user_type;
+    res.redirect("/");
+    return;
+});
+
+// =====logout page begins=====
 app.get("/logout", sessionValidation, (req, res) => {
     req.session.destroy(err => {
         if (err) {
@@ -322,11 +303,10 @@ app.get("/logout", sessionValidation, (req, res) => {
     });
 })
 
-app.use(express.static(__dirname + "/public"));
-
+// =====404 page begins=====
 app.get("*", (req, res) => {
     res.status(404);
-    res.render("error", { authenticated: req.session.authenticated, statusCode: res.statusCode, error: "Page not found!" });
+    res.render("404", { authenticated: req.session.authenticated, statusCode: res.statusCode, error: "Page not found!" });
 })
 
 app.listen(port, () => {
