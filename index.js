@@ -234,13 +234,13 @@ app.get("/resetPassword/:id/:token", async (req, res) => {
         const existingUser = await userCollection.findOne({ _id: new ObjectId(id) });
 
         if (!existingUser) {
-            res.render("resetPassword", { error: "User not found" });
+            res.render("resetPassword", {css: "/css/login.css", error: "User not found" });
             return;
         }
         const secret = jwt_secret + existingUser.password;
         try {
             const verify = jwt.verify(token, secret);
-            res.render("resetPassword", { email: verify.email });
+            res.render("resetPassword", {css: "/css/login.css", email: verify.email });
         } catch (error) {
             console.error("Error verifying token:", error);
             res.status(500).send("Error verifying token");

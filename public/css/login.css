@@ -16,7 +16,17 @@ body {
   background-color: rgba(255, 255, 255, 0.75);
 }
 
+.mt-10 {
+  margin-top: 10vh;
+}
 
+.mt-25 {
+  margin-top: 25vh;
+}
+
+.mt-30 {
+  margin-top: 30vh;
+}
 
 .card-signin {
   border: 0;
