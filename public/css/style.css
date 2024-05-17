@@ -1,0 +1,49 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+
+@media screen and (max-width: 920px) and (max-height: 430px) {
+    /* CSS code for 920x430 resolution */
+}
+
+@media screen and (min-width: 921px) and (min-height: 431px) and (max-width: 1920px) and (max-height: 1080px) {
+    /* CSS code for 1920x1080 resolution */
+}
+
+@media screen and (min-width: 1921px) and (min-height: 1081px) and (max-width: 1024px) and (max-height: 1366px) {
+    /* CSS code for 1024x1366 resolution */
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+/************************ All Pages  ***************************/
+.container {
+    width: 100vw;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-icon {
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar {
+    margin-bottom: 1vh;
+}
+
+
+/************************ Landing Page  ***************************/
+.logo {
+    width: 80vw;
+}
+
+/************************ Inventory Page  ***************************/
+
+
+/************************ Shopping Page  ***************************/
+
+
+/************************ Setting Page  ***************************/
