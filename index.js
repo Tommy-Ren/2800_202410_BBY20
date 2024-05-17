@@ -91,8 +91,12 @@ function adminAuthorization(req, res, next) {
     }
 }
 
+// =====landing page begins=====
 app.get('/', (req, res) => {
-    res.render("index", { css: "/css/index.css" });
+    res.render("index", { authenticated: req.session.authenticated, name: req.session.authenticated?.name });
+
+
+// =====sign up page begins=====
 });
 
 app.get('/homePage/:id', (req, res) => {
@@ -111,36 +115,6 @@ app.get('/setting', (req, res) => {
     const fridges = ['1', '2', '3'];
     const user = {name: "Kiet", email: "kietkiet1109@yahoo.com", password: "123", user_type: "user", phone: "778-809-9869"};
     res.render("setting", {css: "/css/setting.css", fridgeList: fridges, user: user});
-});
-
-app.get('/nosql-injection', async (req, res) => {
-    var username = req.query.user;
-
-    if (!username) {
-        res.send(`<h3>no user provided - try /nosql-injection?user=name</h3> <h3>or /nosql-injection?user[$ne]=name</h3>`);
-        return;
-    }
-    console.log("user: " + username);
-
-    const schema = Joi.string().max(20).required();
-    const validationResult = schema.validate(username);
-
-    //If we didn't use Joi to validate and check for a valid URL parameter below
-    // we could run our userCollection.find and it would be possible to attack.
-    // A URL parameter of user[$ne]=name would get executed as a MongoDB command
-    // and may result in revealing information about all users or a successful
-    // login without knowing the correct password.
-    if (validationResult.error != null) {
-        console.log(validationResult.error);
-        res.send("<h1 style='color:darkred;'>A NoSQL injection attack was detected!!</h1>");
-        return;
-    }
-
-    const result = await userCollection.find({ username: username }).project({ username: 1, email: 1, password: 1, _id: 1, user_type: 1 }).toArray();
-
-    console.log(result);
-
-    res.send(`<h1>Hello, ${username}</h1>`);
 });
 
 app.get('/signup', (req, res) => {
@@ -178,6 +152,38 @@ app.post('/signupSubmit', async (req, res) => {
     res.redirect("/members");
 });
 
+app.get('/nosql-injection', async (req, res) => {
+    var username = req.query.user;
+
+    if (!username) {
+        res.send(`<h3>no user provided - try /nosql-injection?user=name</h3> <h3>or /nosql-injection?user[$ne]=name</h3>`);
+        return;
+    }
+    console.log("user: " + username);
+
+    const schema = Joi.string().max(20).required();
+    const validationResult = schema.validate(username);
+
+    //If we didn't use Joi to validate and check for a valid URL parameter below
+    // we could run our userCollection.find and it would be possible to attack.
+    // A URL parameter of user[$ne]=name would get executed as a MongoDB command
+    // and may result in revealing information about all users or a successful
+    // login without knowing the correct password.
+    if (validationResult.error != null) {
+        console.log(validationResult.error);
+        res.send("<h1 style='color:darkred;'>A NoSQL injection attack was detected!!</h1>");
+        return;
+    }
+
+    const result = await userCollection.find({ username: username }).project({ username: 1, email: 1, password: 1, _id: 1, user_type: 1 }).toArray();
+
+    console.log(result);
+
+    res.send(`<h1>Hello, ${username}</h1>`);
+
+});
+  
+// =====login page begins=====
 app.get('/login', (req, res) => {
     res.render("login", { css: "/css/login.css" });
 });
@@ -217,57 +223,21 @@ app.post('/loggingin', async (req, res) => {
     }
 });
 
-app.get("/members", sessionValidation, (req, res) => {
-    fs.readdir(__dirname + "/public", (err, files) => {
-        if (err) {
-            return res.status(500).send('Internal Server Error');
-        }
-
-        // Filter out non-gif files
-        const gifs = files.filter(file => file.endsWith('.gif'));
-        res.render("members", { authenticated: req.session.authenticated, gifs });
-    })
-})
-
-app.get("/admin", sessionValidation, adminAuthorization, async (req, res) => {
-    const users = await userCollection.find().toArray();
-    res.render("admin", { authenticated: req.session.authenticated, users });
-})
-
-app.post("/refresh", sessionValidation, async (req, res) => {
-    const result = await userCollection.find({ email: req.session.authenticated.email }).project({ user_type: 1 }).toArray();
-    req.session.user_type = result[0].user_type;
-    res.redirect("/");
-    return;
+// =====waiting page begins=====
+app.get('/waiting', (req,res) => {
+    res.render("waiting", {css: "/css/login.css"});
 });
 
-app.post("/promote", async (req, res) => {
-    const { email } = req.body;
-    try {
-        await userCollection.updateOne({ email: email }, { $set: { user_type: "admin" } });
-        console.log(`User promoted: ${email}`);
-        res.redirect("/admin");
-    } catch (error) {
-        console.error("Error promoting user:", error);
-        res.status(500).send("Error promoting user");
-    }
+// =====connectSuccess page begins=====
+app.get('/connectSuccess',(req,res) =>{
+    res.render("connectSuccess", {css: "/css/connectSuccess.css"});
 });
 
-app.post("/demote", async (req, res) => {
-    const { email } = req.body;
-    try {
-        await userCollection.updateOne({ email: email }, { $set: { user_type: "user" } });
-        console.log(`User demoted: ${email}`);
-        res.redirect("/admin");
-    } catch (error) {
-        console.error("Error demoting user:", error);
-        res.status(500).send("Error demoting user");
-    }
-});
 
-app.get("/forgetPassword", (req, res) => {
-    res.render("forgetPassword", { css: "/css/login.css" });
-})
+// =====forgetPassword page begins=====
+app.get('/forgetPassword', (req,res) => {
+    res.render("forgetPassword", {css: "/css/login.css"});
+});
 
 app.post("/resetPassword", async (req, res) => {
     const { email } = req.body;
@@ -278,7 +248,7 @@ app.post("/resetPassword", async (req, res) => {
             return;
         }
         const secret = jwt_secret + existingUser.password;
-        const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, secret, { expiresIn: '5m' });
+        const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, secret, { expiresIn: '100m' });
         const link = `http://localhost:${port}/resetPassword/${existingUser._id}/${token}`;
         
         var transporter = nodemailer.createTransport({
@@ -320,13 +290,13 @@ app.get("/resetPassword/:id/:token", async (req, res) => {
         const existingUser = await userCollection.findOne({ _id: new ObjectId(id) });
 
         if (!existingUser) {
-            res.render("resetPassword", { error: "User not found" });
+            res.render("resetPassword", {css: "/css/login.css", error: "User not found" });
             return;
         }
         const secret = jwt_secret + existingUser.password;
         try {
             const verify = jwt.verify(token, secret);
-            res.render("resetPassword", { email: verify.email });
+            res.render("resetPassword", {css: "/css/login.css", email: verify.email });
         } catch (error) {
             console.error("Error verifying token:", error);
             res.status(500).send("Error verifying token");
@@ -339,6 +309,7 @@ app.get("/resetPassword/:id/:token", async (req, res) => {
     }
 })
 
+//when the user type in the new password
 app.post("/resetPassword/:id/:token", async (req, res) => {
     const { id, token } = req.params;
     const { password } = req.body;
@@ -348,6 +319,7 @@ app.post("/resetPassword/:id/:token", async (req, res) => {
 
         if (!existingUser) {
             res.render("resetPassword", { error: "User not found" });
+            // res.render("resetPassword", { error: "User not found" }, { css: "/css/resetPassword.css" } );
             return;
         }
         const secret = jwt_secret + existingUser.password;
@@ -368,6 +340,14 @@ app.post("/resetPassword/:id/:token", async (req, res) => {
     }
 })
 
+app.post("/refresh", sessionValidation, async (req, res) => {
+    const result = await userCollection.find({ email: req.session.authenticated.email }).project({ user_type: 1 }).toArray();
+    req.session.user_type = result[0].user_type;
+    res.redirect("/");
+    return;
+});
+
+// =====logout page begins=====
 app.get("/logout", sessionValidation, (req, res) => {
     req.session.destroy(err => {
         if (err) {
@@ -378,7 +358,29 @@ app.get("/logout", sessionValidation, (req, res) => {
     });
 })
 
+// =====Home page begins=====
+app.get('/homePage/:id', (req, res) => {
+    const ID = req.params.id;
+    var authorized = isValidSession(req);
+    res.render("homePage", {fridgeName: ID, css: "/css/homePage.css"});
+});
 
+// =====List page begins=====
+app.get('/listPage/:id', (req, res) => {
+    const ID = req.params.id;
+    const ingredientArray = ['budweiser-6can.jpg', 'cadbury-chocolate-mini-egg.png', 'heinz-sauce-ketchup-500ml.png', 'nutella-1kg.png'];
+    res.render("listPage", {fridgeName: ID, css: "/css/listPage.css", ingredients: ingredientArray});
+});
+
+// =====Setting page begins=====
+app.get('/setting', (req, res) => {
+    const fridges = ['1', '2', '3'];
+    const user = {name: "Kiet", email: "kietkiet1109@yahoo.com", password: "123", user_type: "user", phone: "778-809-9869"};
+    res.render("setting", {css: "/css/setting.css", fridgeList: fridges, user: user});
+});
+
+
+// =====404 page begins=====
 app.get("*", (req, res) => {
     res.status(404);
     res.render("404", { authenticated: req.session.authenticated, statusCode: res.statusCode, error: "Page not found!" });
