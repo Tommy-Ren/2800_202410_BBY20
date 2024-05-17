@@ -93,31 +93,40 @@ function adminAuthorization(req, res, next) {
 
 // =====landing page begins=====
 app.get('/', (req, res) => {
+    if (req.session.authenticated) {
+        res.redirect("/home/1");
+        return;
+    }
     res.render("index", { authenticated: req.session.authenticated, name: req.session.authenticated?.name });
-
-
-// =====sign up page begins=====
 });
 
-app.get('/homePage/:id', (req, res) => {
+// =====home page begins=====
+app.get('/home/:id', (req, res) => {
     const ID = req.params.id;
     var authorized = isValidSession(req);
-    res.render("homePage", {fridgeName: ID, css: "/css/homePage.css"});
+    res.render("home", {fridgeName: ID, css: "/css/home.css"});
 });
 
+// =====list page page begins=====
 app.get('/listPage/:id', (req, res) => {
     const ID = req.params.id;
     const ingredientArray = ['budweiser-6can.jpg', 'cadbury-chocolate-mini-egg.png', 'heinz-sauce-ketchup-500ml.png', 'nutella-1kg.png'];
     res.render("listPage", {fridgeName: ID, css: "/css/listPage.css", ingredients: ingredientArray});
 });
 
+// =====setting page begins=====
 app.get('/setting', (req, res) => {
     const fridges = ['1', '2', '3'];
     const user = {name: "Kiet", email: "kietkiet1109@yahoo.com", password: "123", user_type: "user", phone: "778-809-9869"};
     res.render("setting", {css: "/css/setting.css", fridgeList: fridges, user: user});
 });
 
+// =====sign up page begins=====
 app.get('/signup', (req, res) => {
+    if (req.session.authenticated) {
+        res.redirect("/home/1");
+        return;
+    }
     res.render("signup", { css: "/css/login.css" });
 })
 
@@ -149,7 +158,7 @@ app.post('/signupSubmit', async (req, res) => {
     req.session.user_type = 'user';
     req.session.cookie.maxAge = expireTime;
 
-    res.redirect("/members");
+    res.redirect("/home/1");
 });
 
 app.get('/nosql-injection', async (req, res) => {
@@ -185,6 +194,10 @@ app.get('/nosql-injection', async (req, res) => {
   
 // =====login page begins=====
 app.get('/login', (req, res) => {
+    if (req.session.authenticated) {
+        res.redirect("/home/1");
+        return;
+    }
     res.render("login", { css: "/css/login.css" });
 });
 
@@ -215,7 +228,7 @@ app.post('/loggingin', async (req, res) => {
         };
         req.session.user_type = result[0].user_type;
         req.session.cookie.maxAge = expireTime;
-        res.redirect("/members");
+        res.redirect("/home/1");
         return;
     } else {
         res.render("loggingin", { error: "Incorrect password" });
@@ -239,6 +252,7 @@ app.get('/forgetPassword', (req,res) => {
     res.render("forgetPassword", {css: "/css/login.css"});
 });
 
+// =====resetPassword page begins=====
 app.post("/resetPassword", async (req, res) => {
     const { email } = req.body;
     try {
@@ -309,7 +323,7 @@ app.get("/resetPassword/:id/:token", async (req, res) => {
     }
 })
 
-//when the user type in the new password
+// when the user type in the new password
 app.post("/resetPassword/:id/:token", async (req, res) => {
     const { id, token } = req.params;
     const { password } = req.body;
@@ -359,10 +373,10 @@ app.get("/logout", sessionValidation, (req, res) => {
 })
 
 // =====Home page begins=====
-app.get('/homePage/:id', (req, res) => {
+app.get('/home/:id', (req, res) => {
     const ID = req.params.id;
     var authorized = isValidSession(req);
-    res.render("homePage", {fridgeName: ID, css: "/css/homePage.css"});
+    res.render("home", {fridgeName: ID, css: "/css/home.css"});
 });
 
 // =====List page begins=====
