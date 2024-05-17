@@ -6,6 +6,9 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
+const ObjectId = require('mongodb').ObjectId;
+const nodemailer = require('nodemailer');
 const saltRounds = 12;
 
 const port = process.env.PORT || 3000;
@@ -25,6 +28,7 @@ const mongodb_database = process.env.MONGODB_DATABASE;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 
 const node_session_secret = process.env.NODE_SESSION_SECRET;
+const jwt_secret = process.env.JWT_SECRET;
 /* END secret section */
 
 // to use mongoDB -> access db
@@ -92,7 +96,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/signup', (req, res) => {
-    res.render("signup");
+    res.render("signup", { css: "/css/login.css" });
 })
 
 app.post('/signupSubmit', async (req, res) => {
@@ -127,7 +131,7 @@ app.post('/signupSubmit', async (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.render("login");
+    res.render("login", { css: "/css/login.css" });
 });
 
 app.post('/loggingin', async (req, res) => {
@@ -212,6 +216,109 @@ app.post("/demote", async (req, res) => {
         res.status(500).send("Error demoting user");
     }
 });
+
+app.get("/forgetPassword", (req, res) => {
+    res.render("forgetPassword", { css: "/css/login.css" });
+})
+
+app.post("/resetPassword", async (req, res) => {
+    const { email } = req.body;
+    try {
+        const existingUser = await userCollection.findOne({ email });
+        if (!existingUser) {
+            res.send("User not found");
+            return;
+        }
+        const secret = jwt_secret + existingUser.password;
+        const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, secret, { expiresIn: '5m' });
+        const link = `http://localhost:${port}/resetPassword/${existingUser._id}/${token}`;
+        
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'freshstockbby20@gmail.com',
+                pass: 'wqkk gdnc gycz qzre'
+            }
+        });
+
+        var mailOptions = {
+            from: 'freshstockbby20@gmail.com',
+            to: email,
+            subject: 'Link to reset password',
+            text: `Hi ${existingUser.name},
+            We received a request to reset your password.
+            Click this link to be redirected to the reset password page:
+            ${link}
+            This link will expire in 5 minutes.`,
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+    } catch (error) {
+        console.error("Error finding user:", error);
+        res.status(500).send("Error finding user");
+        return;
+    }
+})
+
+app.get("/resetPassword/:id/:token", async (req, res) => {
+    const { id, token } = req.params;
+    try {
+        const existingUser = await userCollection.findOne({ _id: new ObjectId(id) });
+
+        if (!existingUser) {
+            res.render("resetPassword", { error: "User not found" });
+            return;
+        }
+        const secret = jwt_secret + existingUser.password;
+        try {
+            const verify = jwt.verify(token, secret);
+            res.render("resetPassword", { email: verify.email });
+        } catch (error) {
+            console.error("Error verifying token:", error);
+            res.status(500).send("Error verifying token");
+            return;
+        }
+    } catch (error) {
+        console.error("Error finding user:", error);
+        res.status(500).send("Error finding user");
+        return;
+    }
+})
+
+app.post("/resetPassword/:id/:token", async (req, res) => {
+    const { id, token } = req.params;
+    const { password } = req.body;
+    try {
+        const existingUser = await userCollection.findOne({ _id: new ObjectId(id) });
+        console.log(existingUser);
+
+        if (!existingUser) {
+            res.render("resetPassword", { error: "User not found" });
+            return;
+        }
+        const secret = jwt_secret + existingUser.password;
+        try {
+            const verify = jwt.verify(token, secret);
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
+            await userCollection.updateOne({ _id: new ObjectId(id) }, { $set: { password: hashedPassword } });
+            res.redirect("/login");
+        } catch (error) {
+            console.error("Error verifying token:", error);
+            res.status(500).send("Error verifying token");
+            return;
+        }
+    } catch (error) {
+        console.error("Error finding user:", error);
+        res.status(500).send("Error finding user");
+        return;
+    }
+})
 
 app.get("/logout", sessionValidation, (req, res) => {
     req.session.destroy(err => {

@@ -6,33 +6,39 @@
           <div class="card-body">
             <h5 class="card-title text-center">Log In</h5>
 
-            <form class="form-signin" action="/loginSubmit" method="post">
+            <form class="form-signin" action="/loggingin" method="post">
               <div class="form-label-group">
-                <input name="loginEmail" type="email" id="loginEmail" class="form-control" placeholder="Email address"  >
-              
+                <input name="email" type="email" id="loginEmail" class="form-control" placeholder="Email address">
+
               </div>
 
               <div class="form-label-group" z>
-                <input name="loginPassword" type="password" id="loginPassword" class="form-control"
-                  placeholder="Password" required>
-              </div>
-              <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Log in</button>
-
-              <div  class="text">
-                Don't have an account? <a href="/register">Register</a>
+                <input name="password" type="password" id="loginPassword" class="form-control" placeholder="Password"
+                  required>
               </div>
 
-              <hr class="my-4">
+              <div class="text">
+                <a href="/forgetPassword">Forget your password?</a>
+              </div>
 
+              <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
 
-              <button class="btn btn-lg btn-google btn-block text-uppercase" type="submit"><i
-                  class="fab fa-google mr-2"></i> Log in with Google</button>
-              <button class="btn btn-lg btn-facebook btn-block text-uppercase" type="submit"><i
-                  class="fab fa-facebook-f mr-2"></i> Log in with Facebook</button>
+              <div class="text">
+                Don't have an account? <a href="/signup">Sign up</a>
+              </div>
+
+              <div class="divider d-flex align-items-center my-4">
+                <p class="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
+              </div>
+
+              <button class="btn btn-lg btn-google btn-block" type="submit">
+                <i class="bi bi-google"></i> Log in with Google</button>
+              <button class="btn btn-lg btn-facebook btn-block" type="submit">
+                <i class="bi bi-facebook"></i></i> Log in with Facebook</button>
             </form>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- <%- include("templates/footer") %> -->
+<%- include("templates/footer") %>
