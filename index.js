@@ -42,6 +42,8 @@ app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({ extended: false }));
 
+app.use(express.static(__dirname + "/public"));
+
 var mongoStore = MongoStore.create({
     mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/sessions`,
     crypto: {
@@ -330,11 +332,10 @@ app.get("/logout", sessionValidation, (req, res) => {
     });
 })
 
-app.use(express.static(__dirname + "/public"));
 
 app.get("*", (req, res) => {
     res.status(404);
-    res.render("error", { authenticated: req.session.authenticated, statusCode: res.statusCode, error: "Page not found!" });
+    res.render("404", { authenticated: req.session.authenticated, statusCode: res.statusCode, error: "Page not found!" });
 })
 
 app.listen(port, () => {
