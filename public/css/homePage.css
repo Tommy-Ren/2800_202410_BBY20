@@ -11,16 +11,17 @@ body {
     text-align: left;
     position: fixed;
     left: 20px;
-    top: 20px;
-    font-size: 35px;
+    top: 10px;
+    font-size: 30px;
     font-weight: bold;
     font-style: italic;
 }
 
 #eye {
     background-color: #D9D9D9; 
-    border-color: #D9D9D9;
+    border-color: #b4b4b8;
+    border-width: 3px;
     position: fixed;
     right: 20px;
-    top: 20px;
+    top: 10px;
 }

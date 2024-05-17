@@ -4,7 +4,6 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
-const fs = require('fs');
 const saltRounds = 12;
 
 const port =  3000;
@@ -12,9 +11,6 @@ const port =  3000;
 const app = express();
 
 const Joi = require("joi");
-
-
-const expireTime = 60 * 60 * 1000; //expires after 1 hour  (hours * minutes * seconds * millis)
 
 const expireTime = 60 * 60 * 1000; //expires after 1 hour  (hours * minutes * seconds * millis)
 
@@ -33,7 +29,6 @@ const mongoClient = require("mongodb").MongoClient;
 
 var database = new mongoClient(`mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/`);
 
-const userCollection = database.db(mongodb_database).collection('users');
 const userCollection = database.db(mongodb_database).collection('users');
 
 app.set('view engine', 'ejs');
@@ -90,9 +85,22 @@ function adminAuthorization(req, res, next) {
     }
 }
 
-app.get('/', (req, res) => {
+app.get('/homePage/:id', (req, res) => {
+    const ID = req.params.id;
     var authorized = isValidSession(req);
-    res.render("homePage", {fridgeName: "Fridge #1", css: "/css/homePage.css"});
+    res.render("homePage", {fridgeName: ID, css: "/css/homePage.css"});
+});
+
+app.get('/listPage/:id', (req, res) => {
+    const ID = req.params.id;
+    const ingredientArray = ['budweiser-6can.jpg', 'cadbury-chocolate-mini-egg.png', 'heinz-sauce-ketchup-500ml.png', 'nutella-1kg.png'];
+    res.render("listPage", {fridgeName: ID, css: "/css/listPage.css", ingredients: ingredientArray});
+});
+
+app.get('/setting', (req, res) => {
+    const fridges = ['1', '2', '3'];
+    const user = {name: "Kiet", email: "kietkiet1109@yahoo.com", password: "123", user_type: "user", phone: "778-809-9869"};
+    res.render("setting", {css: "/css/setting.css", fridgeList: fridges, user: user});
 });
 
 app.get('/nosql-injection', async (req, res) => {
