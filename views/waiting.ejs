@@ -1,17 +1,20 @@
 <%- include("templates/header") %>
-<div class="spinner">
-  <span class="spinner-border" ></span>
-  <label id="load">Loading</label>
+<div class="waiting">
+  <div class="spinner">
+    <span class="spinner-border" ></span>
+    <label id="load">Loading</label>
+    
+  </div>
+  <p id="connect">Connecting to fridge</p>
   
 </div>
-<p id="connect">Connect to fridge</p>
 
-<script type="text/javascript">   
+<!-- <script type="text/javascript">   
   function Redirect() 
   {  
       window.location="connectSuccess"; 
   } 
   setTimeout('Redirect()', 2200);   
-</script>
+</script> -->
 
 <%- include("templates/footer") %>
