@@ -30,11 +30,9 @@ Team Members:
 	
 ## 4. Technologies and Resources Used
 List technologies (with version numbers), API's, icons, fonts, images, media or data sources, and other resources that were used.
-* HTML, CSS, JavaScript
+* NodeJS, JavaScript
 * Bootstrap 5.0 (Frontend library)
-* Firebase 8.0 (BAAS - Backend as a Service)
-* Google maps API
-* Google Fonts
+* MongoDB
 * Material Icons
 * YouTube tutorials (Maksim: https://www.youtube.com/watch?v=UFD4SP91tSM&t=5427s, https://www.youtube.com/watch?v=CxgOKJh4zWE&t=1s, https://www.youtube.com/playlist?list=PLhPyEFL5u-i3uKNMHSDFx0_EqWiiPsvLk) 
 * SweetAlert2
