@@ -71,7 +71,36 @@ a {
     font-size: 2.25rem;
 }
 
+/* .spinner{
+    display: inline-block;  
+    position: relative; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    margin-top:auto;
+} */
 
+.wrapper {
+    display: table;
+    height: 100vh;
+    width: 100vw;
+}
+
+.spinner{
+    display: table-cell; /* table-cell display*/
+    vertical-align: middle; /* vertical align*/
+    text-align: center;
+}
+
+.spinner-border {
+    width: 4rem; 
+    height: 4rem;
+}
+
+
+#connect{
+    margin-top: 1.2rem;
+    text-align: center;
+}
 /************************ Landing Page  ***************************/
 .logo {
     width: 80vw;
