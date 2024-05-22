@@ -19,8 +19,6 @@ const { url } = require('inspector');
 
 const expireTime = 60 * 60 * 1000; //expires after 1 hour  (hours * minutes * seconds * millis)
 
-
-
 /* secret information section */
 const mongodb_host = process.env.MONGODB_HOST;
 const mongodb_user = process.env.MONGODB_USER;
@@ -202,13 +200,12 @@ app.post("/loggingin", async (req, res) => {
 app.get('/connection', (req,res) => {
   res.render('connection',{ css: "/css/connection.css" });
 })
-// =====connection page ends=====
 
 // =====instruction page begins=====
 app.get('/instruction', (req,res)=> {
   res.render('instruction',{css: "/css/instruction.css"});
 })
-// =====instruction page ends=====
+
 
 // =====waiting page begins=====
 app.get("/waiting", (req, res) => {
@@ -218,8 +215,9 @@ app.get("/waiting", (req, res) => {
 
 // =====connectSuccess page begins=====
 app.get("/connectSuccess", (req, res) => {
-  res.render("connectSuccess", { css: "/css/connectSuccess.css" });
+  res.render("connectSuccess", { css: "/css/connection.css" });
 });
+
 
 // =====forgetPassword page begins=====
 app.get('/forgetPassword', (req, res) => {
