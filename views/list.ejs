@@ -28,14 +28,18 @@
         <% }) %>
     </ul>
 
-<%- include("templates/navbar") %>
+    <div id="generateRecipes" class="fixed-bottom text-center mb-2" style="display: none;">
+        <button class="btn btn-primary btn-lg">Generate Recipes</button>
+    </div>
 
+    <%- include("templates/navbar") %>
 <script>
     const selectIngredients = document.getElementById('selectIngredients');
 
     selectIngredients.addEventListener('click', function(e) {
         e.preventDefault();
         const selectedIngredients = document.querySelectorAll('.form-check-input.ingredient');
+        const generateRecipes = document.getElementById('generateRecipes');
         for (const cb of selectedIngredients) {
             if (cb.hasAttribute('hidden')) {
                 cb.removeAttribute('hidden');
@@ -43,7 +47,27 @@
                 cb.setAttribute('hidden', 'true');
             }
         }
+        if (generateRecipes.style.display === 'none') {
+            generateRecipes.style.display = 'block';
+            const navbar = document.querySelector('.navbar');
+            navbar.remove();
+        } else {
+            generateRecipes.style.display = 'none';
+            generateRecipes.insertAdjacentHTML('afterend', `<%- include("templates/navbar") %>`);
+        }
     });
+
+    const readCheckboxValue = () => {
+        const selectedIngredients = document.querySelectorAll('.form-check-input.ingredient:checked');
+        const values = Array.from(selectedIngredients).map(checkbox => checkbox.value);
+        console.log(values);
+        // Do something with the selected ingredient values
+    };
+
+    // Call the function when a button is clicked or any other event triggers
+    // For example:
+    const button = document.getElementById('myButton');
+    selectIngredients.addEventListener('click', readCheckboxValue);
 </script>
 
 <%- include("templates/footer") %>
