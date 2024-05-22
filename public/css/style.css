@@ -24,6 +24,7 @@
 
 
 html {
+    scrollbar-width: none;
     scroll-behavior: smooth;
 }
 
@@ -45,6 +46,10 @@ a {
     align-items: center;
 }
 
+.mb-12 {
+    margin-bottom: 12vh;
+}
+
 /************************ Navbar  ***************************/
 .nav-icon {
     color: black;
@@ -57,7 +62,7 @@ a {
 
 .navbar {
     justify-content: space-between;
-    background-color: rgba(75, 152, 194, 0.6);
+    background-color: rgba(44, 102, 228, 0.6);
     border-radius: 1.75rem 1.75rem 0 0;
     box-shadow: 0 -1px 12px hsla(174, 63%, 15%, 0.15);
 }

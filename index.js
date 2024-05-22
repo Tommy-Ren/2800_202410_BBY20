@@ -102,13 +102,20 @@ app.get('/', (req, res) => {
 
 // =====home page begins=====
 app.get('/home/:id', (req, res) => {
+    if (!isValidSession(req)) {
+        res.redirect("/");
+        return;
+    }
     const ID = req.params.id;
-    var authorized = isValidSession(req);
     res.render("home", {fridgeName: ID, css: "/css/home.css"});
 });
 
 // =====list page page begins=====
 app.get('/list/:id', (req, res) => {
+    if (!isValidSession(req)) {
+        res.redirect("/");
+        return;
+    }
     const ID = req.params.id;
     const ingredientArray = ['budweiser-6can.jpg', 'cadbury-chocolate-mini-egg.png', 'heinz-sauce-ketchup-500ml.png', 'nutella-1kg.png'];
     res.render("list", {fridgeName: ID, css: "/css/list.css", ingredients: ingredientArray});
@@ -116,6 +123,10 @@ app.get('/list/:id', (req, res) => {
 
 // =====setting page begins=====
 app.get('/setting', (req, res) => {
+    if (!isValidSession(req)) {
+        res.redirect("/");
+        return;
+    }
     const fridges = ['1', '2', '3'];
     const user = {name: "Kiet", email: "kietkiet1109@yahoo.com", password: "123", user_type: "user", phone: "778-809-9869"};
     res.render("setting", {css: "/css/setting.css", fridgeList: fridges, user: user});
@@ -249,6 +260,10 @@ app.get('/connectSuccess',(req,res) =>{
 
 // =====forgetPassword page begins=====
 app.get('/forgetPassword', (req,res) => {
+    if (req.session.authenticated) {
+        res.redirect("/home/1");
+        return;
+    }
     res.render("forgetPassword", {css: "/css/login.css"});
 });
 
@@ -371,28 +386,6 @@ app.get("/logout", sessionValidation, (req, res) => {
         res.redirect("/");
     });
 })
-
-// =====Home page begins=====
-app.get('/home/:id', (req, res) => {
-    const ID = req.params.id;
-    var authorized = isValidSession(req);
-    res.render("home", {fridgeName: ID, css: "/css/home.css"});
-});
-
-// =====List page begins=====
-app.get('/list/:id', (req, res) => {
-    const ID = req.params.id;
-    const ingredientArray = ['budweiser-6can.jpg', 'cadbury-chocolate-mini-egg.png', 'heinz-sauce-ketchup-500ml.png', 'nutella-1kg.png'];
-    res.render("list", {fridgeName: ID, css: "/css/list.css", ingredients: ingredientArray});
-});
-
-// =====Setting page begins=====
-app.get('/setting', (req, res) => {
-    const fridges = ['1', '2', '3'];
-    const user = {name: "Kiet", email: "kietkiet1109@yahoo.com", password: "123", user_type: "user", phone: "778-809-9869"};
-    res.render("setting", {css: "/css/setting.css", fridgeList: fridges, user: user});
-});
-
 
 // =====404 page begins=====
 app.get("*", (req, res) => {
