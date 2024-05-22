@@ -21,13 +21,12 @@
             </form>
         </div>
     </nav>
-    <div class="container">
-        <div class="row mb-12 text-center ">
-            <% for(let i=0; i < ingredients.length; i++) { %>
-                <%- include('templates/ingredient', {ingredient: ingredients[i]}) %>
-                    <% } %>
-        </div>
-    </div>
+
+    <ul>
+        <% ingredients.forEach(ingredient=> { %>
+            <%- include("templates/ingredient", {ingredient}) %>
+        <% }) %>
+    </ul>
 
 <%- include("templates/navbar") %>
 <%- include("templates/footer") %>
