@@ -96,6 +96,15 @@ function adminAuthorization(req, res, next) {
     }
 }
 
+// =====landing page begins=====
+app.get('/', (req, res) => {
+    if (req.session.authenticated) {
+        res.redirect("/home/1");
+        return;
+    }
+    res.render("index", { authenticated: req.session.authenticated, name: req.session.authenticated?.name });
+});
+
 // =====sign up page begins=====
 app.get('/signup', (req, res) => {
     if (req.session.authenticated) {
@@ -329,6 +338,7 @@ app.get('/home/:id', (req, res) => {
     res.render("home", {fridgeName: ID, css: "/css/home.css"});
 });
 
+// =====List page begins=====
 app.get('/list/:id', async(req, res) => {
     if (!isValidSession(req)) {
         res.redirect("/");
