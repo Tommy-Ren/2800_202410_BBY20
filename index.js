@@ -424,8 +424,9 @@ app.post('/saveFridge', async (req, res) => {
   const fridgeName = req.body.fridgeName;
   const ranFridge = Math.floor(Math.random() * 18 + 1);
   const fridgeUrl = `${ranFridge}.png`
+  const owner = req.session.authenticated.email;
 
-  const newFridge = { name: fridgeName, url: fridgeUrl };
+  const newFridge = { name: fridgeName, url: fridgeUrl, owner};
   await fridgeCollection.insertOne(newFridge);
   res.redirect(`home/${newFridge._id}`);
 });
