@@ -19,8 +19,6 @@ const { url } = require('inspector');
 
 const expireTime = 60 * 60 * 1000; //expires after 1 hour  (hours * minutes * seconds * millis)
 
-
-
 /* secret information section */
 const mongodb_host = process.env.MONGODB_HOST;
 const mongodb_user = process.env.MONGODB_USER;
@@ -40,10 +38,6 @@ var database = new mongoClient(
 );
 
 //create 3 collections to store 3 collection infor
-const db = database.db(mongodb_database);
-const userCollection = db.collection("users");
-const itemColletion = db.collection("items");
-const fridgeCollection = db.collection("fridge");
 
 app.set("view engine", "ejs");
 
@@ -57,6 +51,10 @@ var mongoStore = MongoStore.create({
     secret: mongodb_session_secret,
   },
 });
+const db = database.db(mongodb_database)
+const userCollection = db.collection('users');
+const itemColletion = db.collection('items');
+const fridgeCollection = db.collection('fridge');
 
 app.use(
   session({
@@ -107,7 +105,7 @@ function adminAuthorization(req, res, next) {
 // =====landing page begins=====
 app.get('/', (req, res) => {
   if (req.session.authenticated) {
-    res.redirect("/home/1");
+    res.redirect("/home");
     return;
   }
   res.render("index", { authenticated: req.session.authenticated, name: req.session.authenticated?.name });
@@ -116,7 +114,7 @@ app.get('/', (req, res) => {
 // =====sign up page begins=====
 app.get('/signup', (req, res) => {
   if (req.session.authenticated) {
-    res.redirect("/home/1");
+    res.redirect("/home");
     return;
   }
   res.render("signup", { css: "/css/login.css" });
@@ -150,12 +148,12 @@ app.post('/signupSubmit', async (req, res) => {
   req.session.user_type = 'user';
   req.session.cookie.maxAge = expireTime;
 
-  res.redirect("/home/1");
+  res.redirect("/connection");
 });
 
 app.get('/login', (req, res) => {
   if (req.session.authenticated) {
-    res.redirect("/home/1");
+    res.redirect("/home");
     return;
   }
   res.render("login", { css: "/css/login.css" });
@@ -193,7 +191,7 @@ app.post("/loggingin", async (req, res) => {
     };
     req.session.user_type = result[0].user_type;
     req.session.cookie.maxAge = expireTime;
-    res.redirect("/home/1");
+    res.redirect("/home");
     return;
   } else {
     res.render("loggingin", { error: "Incorrect password" });
@@ -202,20 +200,33 @@ app.post("/loggingin", async (req, res) => {
 
 });
 
+// =====connection page begins=====
+app.get('/connection', (req, res) => {
+  res.render('connection', { css: "/css/connection.css" });
+})
+
+// =====instruction page begins=====
+app.get('/instruction', (req, res) => {
+  res.render('instruction', { css: "/css/instruction.css" });
+})
+
+
 // =====waiting page begins=====
 app.get("/waiting", (req, res) => {
   res.render("waiting", { css: "/css/login.css" });
 });
 
+
 // =====connectSuccess page begins=====
 app.get("/connectSuccess", (req, res) => {
-  res.render("connectSuccess", { css: "/css/connectSuccess.css" });
+  res.render("connectSuccess", { css: "/css/connection.css" });
 });
+
 
 // =====forgetPassword page begins=====
 app.get('/forgetPassword', (req, res) => {
   if (req.session.authenticated) {
-    res.redirect("/home/1");
+    res.redirect("/home");
     return;
   }
   res.render("forgetPassword", { css: "/css/login.css" });
@@ -361,22 +372,32 @@ app.get("/logout", sessionValidation, (req, res) => {
 })
 
 // =====Home page begins=====
-app.get('/home/:id', (req, res) => {
+app.get('/home', async (req, res) => {
   if (!isValidSession(req)) {
     res.redirect("/");
     return;
   }
-  const ID = req.params.id;
-  res.render("home", { fridgeName: ID, css: "/css/home.css" });
+  const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
+  if (fridgeArray.length === 0){
+    res.redirect("/connection");
+  } else {
+    let ID = req.query.id || fridgeArray[0]._id;
+    const fridge = fridgeArray.find(f => f._id.equals(ID));
+    res.render("home", {fridge, css: "/css/home.css" });
+  }
 });
 
 // =====List page begins=====
-app.get('/list/:id', async (req, res) => {
+app.get('/list', async (req, res) => {
   if (!isValidSession(req)) {
     res.redirect("/");
     return;
   }
-  const ID = req.params.id;
+
+  const ID = req.query.id;
+  const fridgeArray = await fridgeCollection.find().toArray();
+  const fridge = fridgeArray.find(f => f._id.equals(ID));
+
   const ingredientArray = await itemColletion.find().toArray();
   let fridgeItems = [];
   const numItems = Math.floor(Math.random() * 10 + 5);
@@ -386,7 +407,7 @@ app.get('/list/:id', async (req, res) => {
       fridgeItems.push(item);
     }
   }
-  res.render("list", { fridgeName: ID, css: "/css/list.css", ingredients: fridgeItems });
+  res.render("list", { fridge: fridge, ingredients: fridgeItems, css: "/css/list.css" });
 });
 
 // =====Setting page begins=====
@@ -399,6 +420,19 @@ app.get('/setting', (req, res) => {
   const user = { name: "Kiet", email: "kietkiet1109@yahoo.com", password: "123", user_type: "user", phone: "778-809-9869" };
   res.render("setting", { css: "/css/setting.css", fridgeList: fridges, user: user });
 
+});
+
+// =====Method to save new fridge into MongoDB=====
+app.post('/saveFridge', async (req, res) => {
+  const fridgeName = req.body.fridgeName;
+  const ranFridge = Math.floor(Math.random() * 18 + 1);
+  const fridgeUrl = `${ranFridge}.png`
+  const owner = req.session.authenticated.email;
+
+
+  const newFridge = {name: fridgeName, url: fridgeUrl, owner: owner};
+  await fridgeCollection.insertOne(newFridge);
+  res.redirect(`home/${newFridge._id}`);
 });
 
 // =====404 page begins=====
@@ -414,5 +448,3 @@ app.get("*", (req, res) => {
 app.listen(port, () => {
   console.log("Node application listening on port " + port);
 });
-
-

@@ -1,5 +1,4 @@
-body {
-    background-image: url('/image/fridge/1.png');
+#fridgeImage {
     background-position: center;
     background-repeat: no-repeat;
     background-size: 100% 100%;

@@ -1,0 +1,40 @@
+
+.successText1{
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-weight: bold;
+    margin: 1.5rem;
+    font-size: 2rem ;
+}
+
+.connectSuccessImage{
+    height: 55vh;
+    width: 95vw;
+}
+.successText2{
+    text-align: center;
+    font-weight: bold;
+    margin-top: 2rem;
+    font-size: 1.1rem ;
+}
+
+.center{
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.SaveButton{
+    margin-top: 1.5rem;
+    
+}
+
+#save{
+    font-size: 2.5vh;
+    color: white;
+}
+
+.fridgeNameInput {
+    height: 50px;
+    width: 60vw;
+    font-size: 1.2rem;
+}

@@ -1,12 +1,11 @@
 <%- include("templates/header") %>
-
     <nav class="navtop">
-        <p id="fridgename">Fridge #<%= fridgeName %></p>
+        <p id="fridgename"><%= fridge.name %></p>
         <div class="buttoncontain">
             <form action="" method="get">
                 <button class="btn btn-secondary" id="selectIngredients">Select</button>
             </form>
-            <form action="/home/<%= fridgeName %>" method="get">
+            <form action="/home?ID=<%= fridge._id %>" method="get">
                 <button class="btn btn-secondary" id="slasheye">
                     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor"
                         class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
@@ -31,8 +30,9 @@
     <div id="generateRecipes" class="fixed-bottom text-center mb-2" style="display: none;">
         <button class="btn btn-primary btn-lg">Generate Recipes</button>
     </div>
+    
+<%- include("templates/navbar") %>
 
-    <%- include("templates/navbar") %>
 <script>
     const selectIngredients = document.getElementById('selectIngredients');
 
@@ -69,5 +69,4 @@
     const button = document.getElementById('myButton');
     selectIngredients.addEventListener('click', readCheckboxValue);
 </script>
-
 <%- include("templates/footer") %>
