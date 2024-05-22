@@ -1,12 +1,11 @@
 <%- include("templates/header") %>
-
     <nav class="navtop">
-        <p id="fridgename">Fridge #<%= fridgeName %></p>
+        <p id="fridgename"><%= fridge.name %></p>
         <div class="buttoncontain">
             <form action="/recipe" method="get">
                 <button class="btn btn-secondary" id="select">Select</button>
             </form>
-            <form action="/home/<%= fridgeName %>" method="get">
+            <form action="/home/<%= fridge._id %>" method="get">
                 <button class="btn btn-secondary" id="slasheye">
                     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor"
                         class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
@@ -28,6 +27,5 @@
                     <% } %>
         </div>
     </div>
-
 <%- include("templates/navbar") %>
 <%- include("templates/footer") %>

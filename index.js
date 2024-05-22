@@ -53,6 +53,10 @@ var mongoStore = MongoStore.create({
     secret: mongodb_session_secret,
   },
 });
+const db = database.db(mongodb_database)
+const userCollection = db.collection('users');
+const itemColletion = db.collection('items');
+const fridgeCollection = db.collection('fridge');
 
 app.use(
   session({
@@ -146,7 +150,7 @@ app.post('/signupSubmit', async (req, res) => {
   req.session.user_type = 'user';
   req.session.cookie.maxAge = expireTime;
 
-  res.redirect("/home/1");
+  res.redirect("/connection");
 });
 
 app.get('/login', (req, res) => {
@@ -370,13 +374,16 @@ app.get("/logout", sessionValidation, (req, res) => {
 })
 
 // =====Home page begins=====
-app.get('/home/:id', (req, res) => {
+app.get('/home/:id', async(req, res) => {
   if (!isValidSession(req)) {
     res.redirect("/");
     return;
   }
   const ID = req.params.id;
-  res.render("home", { fridgeName: ID, css: "/css/home.css" });
+  const fridgeArray = await fridgeCollection.find().toArray();
+  const fridge = fridgeArray.find(f => f._id.equals(ID));
+
+  res.render("home", {fridge, css: "/css/home.css" });
 });
 
 // =====List page begins=====
@@ -385,7 +392,11 @@ app.get('/list/:id', async (req, res) => {
     res.redirect("/");
     return;
   }
+
   const ID = req.params.id;
+  const fridgeArray = await fridgeCollection.find().toArray();
+  const fridge = fridgeArray.find(f => f._id.equals(ID));
+
   const ingredientArray = await itemColletion.find().toArray();
   let fridgeItems = [];
   const numItems = Math.floor(Math.random() * 10 + 5);
@@ -395,7 +406,7 @@ app.get('/list/:id', async (req, res) => {
       fridgeItems.push(item);
     }
   }
-  res.render("list", { fridgeName: ID, css: "/css/list.css", ingredients: fridgeItems });
+  res.render("list", {fridge: fridge, ingredients: fridgeItems, css: "/css/list.css"});
 });
 
 // =====Setting page begins=====
@@ -408,6 +419,17 @@ app.get('/setting', (req, res) => {
   const user = { name: "Kiet", email: "kietkiet1109@yahoo.com", password: "123", user_type: "user", phone: "778-809-9869" };
   res.render("setting", { css: "/css/setting.css", fridgeList: fridges, user: user });
 
+});
+
+// =====Method to save new fridge into MongoDB=====
+app.post('/saveFridge', async(req, res) => {
+    const fridgeName = req.body.fridgeName;
+    const ranFridge = Math.floor(Math.random() * 18 + 1);
+    const fridgeUrl = `${ranFridge}.png`
+    
+    const newFridge = {name: fridgeName, url: fridgeUrl};
+    await fridgeCollection.insertOne(newFridge);
+    res.redirect(`home/${newFridge._id}`);
 });
 
 // =====404 page begins=====
