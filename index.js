@@ -14,6 +14,8 @@ const port =  3000;
 const app = express();
 
 const Joi = require("joi");
+const { name } = require('ejs');
+const { url } = require('inspector');
 
 const expireTime = 60 * 60 * 1000; //expires after 1 hour  (hours * minutes * seconds * millis)
 
@@ -33,7 +35,10 @@ const mongoClient = require("mongodb").MongoClient;
 
 var database = new mongoClient(`mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/`);
 
-const userCollection = database.db(mongodb_database).collection('users');
+const db = database.db(mongodb_database)
+const userCollection = db.collection('users');
+const itemColletion = db.collection('items');
+const fridgeCollection = db.collection('fridge');
 
 app.set('view engine', 'ejs');
 
@@ -91,47 +96,6 @@ function adminAuthorization(req, res, next) {
     }
 }
 
-// =====landing page begins=====
-app.get('/', (req, res) => {
-    if (req.session.authenticated) {
-        res.redirect("/home/1");
-        return;
-    }
-    res.render("index", { authenticated: req.session.authenticated, name: req.session.authenticated?.name });
-});
-
-// =====home page begins=====
-app.get('/home/:id', (req, res) => {
-    if (!isValidSession(req)) {
-        res.redirect("/");
-        return;
-    }
-    const ID = req.params.id;
-    res.render("home", {fridgeName: ID, css: "/css/home.css"});
-});
-
-// =====list page page begins=====
-app.get('/list/:id', (req, res) => {
-    if (!isValidSession(req)) {
-        res.redirect("/");
-        return;
-    }
-    const ID = req.params.id;
-    const ingredientArray = ['budweiser-6can.jpg', 'cadbury-chocolate-mini-egg.png', 'heinz-sauce-ketchup-500ml.png', 'nutella-1kg.png'];
-    res.render("list", {fridgeName: ID, css: "/css/list.css", ingredients: ingredientArray});
-});
-
-// =====setting page begins=====
-app.get('/setting', (req, res) => {
-    if (!isValidSession(req)) {
-        res.redirect("/");
-        return;
-    }
-    const fridges = ['1', '2', '3'];
-    const user = {name: "Kiet", email: "kietkiet1109@yahoo.com", password: "123", user_type: "user", phone: "778-809-9869"};
-    res.render("setting", {css: "/css/setting.css", fridgeList: fridges, user: user});
-});
-
 // =====sign up page begins=====
 app.get('/signup', (req, res) => {
     if (req.session.authenticated) {
@@ -172,38 +136,6 @@ app.post('/signupSubmit', async (req, res) => {
     res.redirect("/home/1");
 });
 
-app.get('/nosql-injection', async (req, res) => {
-    var username = req.query.user;
-
-    if (!username) {
-        res.send(`<h3>no user provided - try /nosql-injection?user=name</h3> <h3>or /nosql-injection?user[$ne]=name</h3>`);
-        return;
-    }
-    console.log("user: " + username);
-
-    const schema = Joi.string().max(20).required();
-    const validationResult = schema.validate(username);
-
-    //If we didn't use Joi to validate and check for a valid URL parameter below
-    // we could run our userCollection.find and it would be possible to attack.
-    // A URL parameter of user[$ne]=name would get executed as a MongoDB command
-    // and may result in revealing information about all users or a successful
-    // login without knowing the correct password.
-    if (validationResult.error != null) {
-        console.log(validationResult.error);
-        res.send("<h1 style='color:darkred;'>A NoSQL injection attack was detected!!</h1>");
-        return;
-    }
-
-    const result = await userCollection.find({ username: username }).project({ username: 1, email: 1, password: 1, _id: 1, user_type: 1 }).toArray();
-
-    console.log(result);
-
-    res.send(`<h1>Hello, ${username}</h1>`);
-
-});
-  
-// =====login page begins=====
 app.get('/login', (req, res) => {
     if (req.session.authenticated) {
         res.redirect("/home/1");
@@ -383,9 +315,49 @@ app.get("/logout", sessionValidation, (req, res) => {
             return res.status(500).send('Internal Server Error');
         }
 
-        res.redirect("/");
+        res.redirect("/login");
     });
 })
+
+// =====Home page begins=====
+app.get('/home/:id', (req, res) => {
+    if (!isValidSession(req)) {
+        res.redirect("/");
+        return;
+    }
+    const ID = req.params.id;
+    res.render("home", {fridgeName: ID, css: "/css/home.css"});
+});
+
+app.get('/list/:id', async(req, res) => {
+    if (!isValidSession(req)) {
+        res.redirect("/");
+        return;
+    }
+    const ID = req.params.id;
+    const ingredientArray = await itemColletion.find().toArray();
+    let fridgeItems = [];
+    const numItems = Math.floor(Math.random() * 10 + 5);
+    while (fridgeItems.length < numItems) {
+        let item = ingredientArray[Math.floor(Math.random() * ingredientArray.length)];
+        if (!fridgeItems.includes(item)) {
+            fridgeItems.push(item);
+        }
+    }
+    res.render("list", {fridgeName: ID, css: "/css/list.css", ingredients: fridgeItems});
+});
+
+// =====Setting page begins=====
+app.get('/setting', (req, res) => {
+    if (!isValidSession(req)) {
+        res.redirect("/");
+        return;
+    }
+    const fridges = ['1', '2', '3'];
+    const user = {name: "Kiet", email: "kietkiet1109@yahoo.com", password: "123", user_type: "user", phone: "778-809-9869"};
+    res.render("setting", {css: "/css/setting.css", fridgeList: fridges, user: user});
+});
+
 
 // =====404 page begins=====
 app.get("*", (req, res) => {

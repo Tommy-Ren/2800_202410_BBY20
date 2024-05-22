@@ -1,9 +1,14 @@
 <div class="col-md-4 themed-grid-col" id="item">
     <div class="col d-flex align-items-start">
-        <img src="/image/ingredient/<%= ingredient %>" width="150" height="150">
+        <img src="/image/items/<%= ingredient.url %>" width="200" height="200">
         <div>
-            <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Item</h3>
-            <p>Expired Date</p>
+            <h3 class="fw-bold mb-0 fs-4 text-body-emphasis"><%= ingredient.name %></h3>
+            <% if (ingredient.cooked === "yes") { %>
+                <p>Time in the fridge: <%= ingredient.expiredDate %></p>
+            <% } else { %>
+                <p>Expired Date: <%= ingredient.expiredDate %></p>
+            <% } %>
+            <p>Quantity: <%= ingredient.quantity %></p>
         </div>
     </div>
 </div>
