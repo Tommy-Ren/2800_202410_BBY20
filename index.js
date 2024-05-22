@@ -40,10 +40,6 @@ var database = new mongoClient(
 );
 
 //create 3 collections to store 3 collection infor
-const db = database.db(mongodb_database);
-const userCollection = db.collection("users");
-const itemColletion = db.collection("items");
-const fridgeCollection = db.collection("fridge");
 
 app.set("view engine", "ejs");
 
@@ -202,10 +198,23 @@ app.post("/loggingin", async (req, res) => {
 
 });
 
+// =====connection page begins=====
+app.get('/connection', (req,res) => {
+  res.render('connection',{ css: "/css/connection.css" });
+})
+// =====connection page ends=====
+
+// =====instruction page begins=====
+app.get('/instruction', (req,res)=> {
+  res.render('instruction',{css: "/css/instruction.css"});
+})
+// =====instruction page ends=====
+
 // =====waiting page begins=====
 app.get("/waiting", (req, res) => {
   res.render("waiting", { css: "/css/login.css" });
 });
+
 
 // =====connectSuccess page begins=====
 app.get("/connectSuccess", (req, res) => {
