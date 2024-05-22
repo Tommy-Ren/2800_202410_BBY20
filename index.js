@@ -201,13 +201,13 @@ app.post("/loggingin", async (req, res) => {
 });
 
 // =====connection page begins=====
-app.get('/connection', (req,res) => {
-  res.render('connection',{ css: "/css/connection.css" });
+app.get('/connection', (req, res) => {
+  res.render('connection', { css: "/css/connection.css" });
 })
 
 // =====instruction page begins=====
-app.get('/instruction', (req,res)=> {
-  res.render('instruction',{css: "/css/instruction.css"});
+app.get('/instruction', (req, res) => {
+  res.render('instruction', { css: "/css/instruction.css" });
 })
 
 
@@ -372,7 +372,7 @@ app.get("/logout", sessionValidation, (req, res) => {
 })
 
 // =====Home page begins=====
-app.get('/home/:id', async(req, res) => {
+app.get('/home/:id', async (req, res) => {
   if (!isValidSession(req)) {
     res.redirect("/");
     return;
@@ -381,7 +381,7 @@ app.get('/home/:id', async(req, res) => {
   const fridgeArray = await fridgeCollection.find().toArray();
   const fridge = fridgeArray.find(f => f._id.equals(ID));
 
-  res.render("home", {fridge, css: "/css/home.css" });
+  res.render("home", { fridge, css: "/css/home.css" });
 });
 
 // =====List page begins=====
@@ -404,7 +404,7 @@ app.get('/list/:id', async (req, res) => {
       fridgeItems.push(item);
     }
   }
-  res.render("list", {fridge: fridge, ingredients: fridgeItems, css: "/css/list.css"});
+  res.render("list", { fridge: fridge, ingredients: fridgeItems, css: "/css/list.css" });
 });
 
 // =====Setting page begins=====
@@ -420,14 +420,14 @@ app.get('/setting', (req, res) => {
 });
 
 // =====Method to save new fridge into MongoDB=====
-app.post('/saveFridge', async(req, res) => {
-    const fridgeName = req.body.fridgeName;
-    const ranFridge = Math.floor(Math.random() * 18 + 1);
-    const fridgeUrl = `${ranFridge}.png`
-    
-    const newFridge = {name: fridgeName, url: fridgeUrl};
-    await fridgeCollection.insertOne(newFridge);
-    res.redirect(`home/${newFridge._id}`);
+app.post('/saveFridge', async (req, res) => {
+  const fridgeName = req.body.fridgeName;
+  const ranFridge = Math.floor(Math.random() * 18 + 1);
+  const fridgeUrl = `${ranFridge}.png`
+
+  const newFridge = { name: fridgeName, url: fridgeUrl };
+  await fridgeCollection.insertOne(newFridge);
+  res.redirect(`home/${newFridge._id}`);
 });
 
 // =====404 page begins=====
