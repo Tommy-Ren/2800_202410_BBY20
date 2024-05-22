@@ -105,7 +105,7 @@ function adminAuthorization(req, res, next) {
 // =====landing page begins=====
 app.get('/', (req, res) => {
   if (req.session.authenticated) {
-    res.redirect("/home/1");
+    res.redirect("/home");
     return;
   }
   res.render("index", { authenticated: req.session.authenticated, name: req.session.authenticated?.name });
@@ -114,7 +114,7 @@ app.get('/', (req, res) => {
 // =====sign up page begins=====
 app.get('/signup', (req, res) => {
   if (req.session.authenticated) {
-    res.redirect("/home/1");
+    res.redirect("/home");
     return;
   }
   res.render("signup", { css: "/css/login.css" });
@@ -153,7 +153,7 @@ app.post('/signupSubmit', async (req, res) => {
 
 app.get('/login', (req, res) => {
   if (req.session.authenticated) {
-    res.redirect("/home/1");
+    res.redirect("/home");
     return;
   }
   res.render("login", { css: "/css/login.css" });
@@ -191,7 +191,7 @@ app.post("/loggingin", async (req, res) => {
     };
     req.session.user_type = result[0].user_type;
     req.session.cookie.maxAge = expireTime;
-    res.redirect("/home/1");
+    res.redirect("/home");
     return;
   } else {
     res.render("loggingin", { error: "Incorrect password" });
@@ -226,7 +226,7 @@ app.get("/connectSuccess", (req, res) => {
 // =====forgetPassword page begins=====
 app.get('/forgetPassword', (req, res) => {
   if (req.session.authenticated) {
-    res.redirect("/home/1");
+    res.redirect("/home");
     return;
   }
   res.render("forgetPassword", { css: "/css/login.css" });
@@ -372,26 +372,29 @@ app.get("/logout", sessionValidation, (req, res) => {
 })
 
 // =====Home page begins=====
-app.get('/home/:id', async (req, res) => {
+app.get('/home', async (req, res) => {
   if (!isValidSession(req)) {
     res.redirect("/");
     return;
   }
-  const ID = req.params.id;
-  const fridgeArray = await fridgeCollection.find().toArray();
-  const fridge = fridgeArray.find(f => f._id.equals(ID));
-
-  res.render("home", { fridge, css: "/css/home.css" });
+  const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
+  if (fridgeArray.length === 0){
+    res.redirect("/connection");
+  } else {
+    let ID = req.query.id || fridgeArray[0]._id;
+    const fridge = fridgeArray.find(f => f._id.equals(ID));
+    res.render("home", {fridge, css: "/css/home.css" });
+  }
 });
 
 // =====List page begins=====
-app.get('/list/:id', async (req, res) => {
+app.get('/list', async (req, res) => {
   if (!isValidSession(req)) {
     res.redirect("/");
     return;
   }
 
-  const ID = req.params.id;
+  const ID = req.query.id;
   const fridgeArray = await fridgeCollection.find().toArray();
   const fridge = fridgeArray.find(f => f._id.equals(ID));
 
@@ -424,8 +427,9 @@ app.post('/saveFridge', async (req, res) => {
   const fridgeName = req.body.fridgeName;
   const ranFridge = Math.floor(Math.random() * 18 + 1);
   const fridgeUrl = `${ranFridge}.png`
+  const owner = req.session.authenticated.email;
 
-  const newFridge = { name: fridgeName, url: fridgeUrl };
+  const newFridge = {name: fridgeName, url: fridgeUrl, owner: owner};
   await fridgeCollection.insertOne(newFridge);
   res.redirect(`home/${newFridge._id}`);
 });
@@ -443,5 +447,3 @@ app.get("*", (req, res) => {
 app.listen(port, () => {
   console.log("Node application listening on port " + port);
 });
-
-
