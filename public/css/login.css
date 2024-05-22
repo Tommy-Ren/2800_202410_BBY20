@@ -4,40 +4,18 @@
 }
 
 body {
-
   background: url("/image/fridge-bg.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   min-height: 100vh;
-  /* backdrop-filter: blur(15px); */
+  width: 100vw;
+  display: grid;
+  place-items: center;
 }
-
-/* 
-  .glass{
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 20px;
-    border:1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-} */
-/* 
-.card-body{
-  background: rgb(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  color:white;
-  box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.5);
-} */
-
 
 .my-5 {
   background-color: rgba(255, 255, 255, 0.75);
 }
-
-/* .btn-primary{
-  background-color: rgba(60, 125, 222, 0.8);
-} */
-
 
 .card-signin {
   border: 0;
@@ -66,7 +44,7 @@ body {
   border-radius: 0rem;
   letter-spacing: .1rem;
   font-weight: bold;
-  margin-top: 1rem;
+  margin-bottom: 1rem;
   padding: 1rem;
   transition: all 0.2s;
   border-radius: .5rem;
@@ -132,8 +110,19 @@ body {
 
 .divider:after,
 .divider:before {
-content: "";
-flex: 1;
-height: 1px;
-background: black;
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: black;
+}
+
+.spinner-border{
+  padding: 20px;
+  color: rgb(254, 252, 252);
+}
+
+#load, #connect {
+  font-size: 30px;
+  color: rgb(254, 252, 252);
+  font-weight: bold;
 }
