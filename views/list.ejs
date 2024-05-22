@@ -3,8 +3,8 @@
     <nav class="navtop">
         <p id="fridgename">Fridge #<%= fridgeName %></p>
         <div class="buttoncontain">
-            <form action="/recipe" method="get">
-                <button class="btn btn-secondary" id="select">Select</button>
+            <form action="" method="get">
+                <button class="btn btn-secondary" id="selectIngredients">Select</button>
             </form>
             <form action="/home/<%= fridgeName %>" method="get">
                 <button class="btn btn-secondary" id="slasheye">
@@ -29,4 +29,21 @@
     </ul>
 
 <%- include("templates/navbar") %>
+
+<script>
+    const selectIngredients = document.getElementById('selectIngredients');
+
+    selectIngredients.addEventListener('click', function(e) {
+        e.preventDefault();
+        const selectedIngredients = document.querySelectorAll('.form-check-input.ingredient');
+        for (const cb of selectedIngredients) {
+            if (cb.hasAttribute('hidden')) {
+                cb.removeAttribute('hidden');
+            } else {
+                cb.setAttribute('hidden', 'true');
+            }
+        }
+    });
+</script>
+
 <%- include("templates/footer") %>
