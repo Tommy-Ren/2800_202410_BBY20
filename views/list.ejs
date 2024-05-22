@@ -2,8 +2,8 @@
     <nav class="navtop">
         <p id="fridgename"><%= fridge.name %></p>
         <div class="buttoncontain">
-            <form action="/recipe" method="get">
-                <button class="btn btn-secondary" id="select">Select</button>
+            <form action="" method="get">
+                <button class="btn btn-secondary" id="selectIngredients">Select</button>
             </form>
             <form action="/home?ID=<%= fridge._id %>" method="get">
                 <button class="btn btn-secondary" id="slasheye">
@@ -20,12 +20,53 @@
             </form>
         </div>
     </nav>
-    <div class="container">
-        <div class="row mb-12 text-center ">
-            <% for(let i=0; i < ingredients.length; i++) { %>
-                <%- include('templates/ingredient', {ingredient: ingredients[i]}) %>
-                    <% } %>
-        </div>
+
+    <ul>
+        <% ingredients.forEach(ingredient=> { %>
+            <%- include("templates/ingredient", {ingredient}) %>
+        <% }) %>
+    </ul>
+
+    <div id="generateRecipes" class="fixed-bottom text-center mb-2" style="display: none;">
+        <button class="btn btn-primary btn-lg">Generate Recipes</button>
     </div>
+    
 <%- include("templates/navbar") %>
+
+<script>
+    const selectIngredients = document.getElementById('selectIngredients');
+
+    selectIngredients.addEventListener('click', function(e) {
+        e.preventDefault();
+        const selectedIngredients = document.querySelectorAll('.form-check-input.ingredient');
+        const generateRecipes = document.getElementById('generateRecipes');
+        for (const cb of selectedIngredients) {
+            if (cb.hasAttribute('hidden')) {
+                cb.removeAttribute('hidden');
+            } else {
+                cb.setAttribute('hidden', 'true');
+            }
+        }
+        if (generateRecipes.style.display === 'none') {
+            generateRecipes.style.display = 'block';
+            const navbar = document.querySelector('.navbar');
+            navbar.remove();
+        } else {
+            generateRecipes.style.display = 'none';
+            generateRecipes.insertAdjacentHTML('afterend', `<%- include("templates/navbar") %>`);
+        }
+    });
+
+    const readCheckboxValue = () => {
+        const selectedIngredients = document.querySelectorAll('.form-check-input.ingredient:checked');
+        const values = Array.from(selectedIngredients).map(checkbox => checkbox.value);
+        console.log(values);
+        // Do something with the selected ingredient values
+    };
+
+    // Call the function when a button is clicked or any other event triggers
+    // For example:
+    const button = document.getElementById('myButton');
+    selectIngredients.addEventListener('click', readCheckboxValue);
+</script>
 <%- include("templates/footer") %>
