@@ -45,11 +45,6 @@ const userCollection = db.collection("users");
 const itemColletion = db.collection("items");
 const fridgeCollection = db.collection("fridge");
 
-const db = database.db(mongodb_database)
-const userCollection = db.collection('users');
-const itemColletion = db.collection('items');
-const fridgeCollection = db.collection('fridge');
-
 app.set("view engine", "ejs");
 
 app.use(express.urlencoded({ extended: false }));
