@@ -429,6 +429,7 @@ app.post('/saveFridge', async (req, res) => {
   const fridgeUrl = `${ranFridge}.png`
   const owner = req.session.authenticated.email;
 
+
   const newFridge = {name: fridgeName, url: fridgeUrl, owner: owner};
   await fridgeCollection.insertOne(newFridge);
   res.redirect(`home/${newFridge._id}`);
