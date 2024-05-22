@@ -1,0 +1,40 @@
+.container {
+    margin: auto;
+}
+#connect{
+    margin-top: 1.2rem;
+    text-align: center;
+}
+
+
+#connectSuccess{
+    font-size: 1.5rem;
+}
+
+.connectSuccessText{
+    text-align: center;
+    font-weight: bold;
+    margin: 1.5rem;
+    font-size: 1.1rem ;
+}
+
+.connectSuccessForm{
+    margin-top: 2.6rem;
+    text-align: center;
+}
+
+.SaveButton{
+    margin-top: 1.5rem;
+    
+}
+
+#save{
+    font-size: 1.4rem;
+    color: white;
+}
+
+.fridgeNameInput {
+    height: 50px;
+    width: 280px ;
+    font-size: 1.2rem;
+}

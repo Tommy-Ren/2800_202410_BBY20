@@ -1,0 +1,63 @@
+#ready{
+    display: block;
+    text-align: center;
+    font-size: 1.9rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+
+}
+.description{
+    display: inline-block;
+    font-size: 1.5rem;
+}
+
+.circle {
+    float: left;
+}
+
+.cover {
+    margin-top: 15rem;
+    position: absolute; 
+    z-index:2;
+}
+
+
+.content{
+    margin-top: 15rem;
+    position: absolute; 
+    z-index:1; 
+    margin-left:70px;
+    display: inline-block;
+    margin-right:auto;
+}
+
+#instruction1 {
+    margin-top: 18px;
+}
+
+#instruction2 {
+    margin-top: 26px;
+}
+
+#instruction3 {
+    margin-top: 24px;
+}
+
+#num2 {
+    margin-top: 25px;
+}
+
+#num3{
+    margin-top: 28px;
+}
+
+form{
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.btn{
+    height: 3rem;
+    width: 10rem;
+    font-size: 1.6rem;
+}
