@@ -1,19 +1,14 @@
 <%- include("templates/header") %>
-
-
-<div class = "container" style="width:430px; height:932px;">
-    <div class="connectSuccessText" id="connectSuccess">Connect Successfully!</div>
-    <img style="display:block;margin-left:auto; margin-right:auto;" src="/image/connectionSuccess.png" width="95%" height="60%">
-    <p class="connectSuccessText">Now it's time to give your new fridge a name!</p>
-    <form action="" class="connectSuccessForm">
-        <input class="fridgeNameInput" type="text"  placeholder="Super Fridge #1">
-        <div class="SaveButton">
-            <button class="btn btn-success btn-lg" id="save">Save</button>
+    <div class="container">
+        <div class="successText1">Connect Successfully!</div>
+        <div class="d-flex justify-content-center">
+            <img src="/image/connectionSuccess.png" class="connectSuccessImage">
         </div>
-        
-    </form>
-</div>
-
-
-    
+        <div class="successText2">Now, it's time to give your new fridge a name!</div>
+        <form class="connectSuccessForm">
+            <input class="fridgeNameInput" type="text" placeholder="Name" style="font-size: 3vh;">
+            <br>
+            <button class="btn btn-info btn-lg mt-4" id="save">Save</button>
+        </form>
+    </div>
 <%- include("templates/footer") %>

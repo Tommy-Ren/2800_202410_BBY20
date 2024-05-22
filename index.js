@@ -41,11 +41,6 @@ var database = new mongoClient(
 
 //create 3 collections to store 3 collection infor
 
-const db = database.db(mongodb_database)
-const userCollection = db.collection('users');
-const itemColletion = db.collection('items');
-const fridgeCollection = db.collection('fridge');
-
 app.set("view engine", "ejs");
 
 app.use(express.urlencoded({ extended: false }));
@@ -107,59 +102,59 @@ function adminAuthorization(req, res, next) {
 
 // =====landing page begins=====
 app.get('/', (req, res) => {
-    if (req.session.authenticated) {
-        res.redirect("/home/1");
-        return;
-    }
-    res.render("index", { authenticated: req.session.authenticated, name: req.session.authenticated?.name });
+  if (req.session.authenticated) {
+    res.redirect("/home/1");
+    return;
+  }
+  res.render("index", { authenticated: req.session.authenticated, name: req.session.authenticated?.name });
 });
 
 // =====sign up page begins=====
 app.get('/signup', (req, res) => {
-    if (req.session.authenticated) {
-        res.redirect("/home/1");
-        return;
-    }
-    res.render("signup", { css: "/css/login.css" });
+  if (req.session.authenticated) {
+    res.redirect("/home/1");
+    return;
+  }
+  res.render("signup", { css: "/css/login.css" });
 })
 
 app.post('/signupSubmit', async (req, res) => {
-    const { name, email, password } = req.body;
+  const { name, email, password } = req.body;
 
-    const schema = Joi.object(
-        {
-            name: Joi.string().regex(/^[a-zA-Z\s]*$/).max(20).required(),
-            email: Joi.string().email().required(),
-            password: Joi.string().max(20).required()
-        });
+  const schema = Joi.object(
+    {
+      name: Joi.string().regex(/^[a-zA-Z\s]*$/).max(20).required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().max(20).required()
+    });
 
-    const validationResult = schema.validate({ name, email, password });
-    if (validationResult.error != null) {
-        res.render("signupSubmit", { error: validationResult.error.details[0].message });
-        return;
-    }
+  const validationResult = schema.validate({ name, email, password });
+  if (validationResult.error != null) {
+    res.render("signupSubmit", { error: validationResult.error.details[0].message });
+    return;
+  }
 
-    var hashedPassword = await bcrypt.hash(password, saltRounds);
+  var hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    await userCollection.insertOne({ name, email, password: hashedPassword, user_type: 'user' });
+  await userCollection.insertOne({ name, email, password: hashedPassword, user_type: 'user' });
 
-    // Create session
-    req.session.authenticated = {
-        name: name,
-        email: email,
-    };
-    req.session.user_type = 'user';
-    req.session.cookie.maxAge = expireTime;
+  // Create session
+  req.session.authenticated = {
+    name: name,
+    email: email,
+  };
+  req.session.user_type = 'user';
+  req.session.cookie.maxAge = expireTime;
 
-    res.redirect("/home/1");
+  res.redirect("/home/1");
 });
 
 app.get('/login', (req, res) => {
-    if (req.session.authenticated) {
-        res.redirect("/home/1");
-        return;
-    }
-    res.render("login", { css: "/css/login.css" });
+  if (req.session.authenticated) {
+    res.redirect("/home/1");
+    return;
+  }
+  res.render("login", { css: "/css/login.css" });
 });
 
 app.post("/loggingin", async (req, res) => {
@@ -194,13 +189,13 @@ app.post("/loggingin", async (req, res) => {
     };
     req.session.user_type = result[0].user_type;
     req.session.cookie.maxAge = expireTime;
-    res.redirect("/members");
+    res.redirect("/home/1");
     return;
   } else {
     res.render("loggingin", { error: "Incorrect password" });
     return;
   }
-  
+
 });
 
 // =====connection page begins=====
@@ -227,12 +222,12 @@ app.get("/connectSuccess", (req, res) => {
 });
 
 // =====forgetPassword page begins=====
-app.get('/forgetPassword', (req,res) => {
-    if (req.session.authenticated) {
-        res.redirect("/home/1");
-        return;
-    }
-    res.render("forgetPassword", {css: "/css/login.css"});
+app.get('/forgetPassword', (req, res) => {
+  if (req.session.authenticated) {
+    res.redirect("/home/1");
+    return;
+  }
+  res.render("forgetPassword", { css: "/css/login.css" });
 });
 
 // =====resetPassword page begins=====
@@ -370,48 +365,48 @@ app.get("/logout", sessionValidation, (req, res) => {
     if (err) {
       return res.status(500).send("Internal Server Error");
     }
-      res.redirect("/login");
-    });
+    res.redirect("/login");
+  });
 })
 
 // =====Home page begins=====
 app.get('/home/:id', (req, res) => {
-    if (!isValidSession(req)) {
-        res.redirect("/");
-        return;
-    }
-    const ID = req.params.id;
-    res.render("home", {fridgeName: ID, css: "/css/home.css"});
+  if (!isValidSession(req)) {
+    res.redirect("/");
+    return;
+  }
+  const ID = req.params.id;
+  res.render("home", { fridgeName: ID, css: "/css/home.css" });
 });
 
 // =====List page begins=====
-app.get('/list/:id', async(req, res) => {
-    if (!isValidSession(req)) {
-        res.redirect("/");
-        return;
+app.get('/list/:id', async (req, res) => {
+  if (!isValidSession(req)) {
+    res.redirect("/");
+    return;
+  }
+  const ID = req.params.id;
+  const ingredientArray = await itemColletion.find().toArray();
+  let fridgeItems = [];
+  const numItems = Math.floor(Math.random() * 10 + 5);
+  while (fridgeItems.length < numItems) {
+    let item = ingredientArray[Math.floor(Math.random() * ingredientArray.length)];
+    if (!fridgeItems.includes(item)) {
+      fridgeItems.push(item);
     }
-    const ID = req.params.id;
-    const ingredientArray = await itemColletion.find().toArray();
-    let fridgeItems = [];
-    const numItems = Math.floor(Math.random() * 10 + 5);
-    while (fridgeItems.length < numItems) {
-        let item = ingredientArray[Math.floor(Math.random() * ingredientArray.length)];
-        if (!fridgeItems.includes(item)) {
-            fridgeItems.push(item);
-        }
-    }
-    res.render("list", {fridgeName: ID, css: "/css/list.css", ingredients: fridgeItems});
+  }
+  res.render("list", { fridgeName: ID, css: "/css/list.css", ingredients: fridgeItems });
 });
 
 // =====Setting page begins=====
 app.get('/setting', (req, res) => {
-    if (!isValidSession(req)) {
-        res.redirect("/");
-        return;
-    }
-    const fridges = ['1', '2', '3'];
-    const user = {name: "Kiet", email: "kietkiet1109@yahoo.com", password: "123", user_type: "user", phone: "778-809-9869"};
-    res.render("setting", {css: "/css/setting.css", fridgeList: fridges, user: user});
+  if (!isValidSession(req)) {
+    res.redirect("/");
+    return;
+  }
+  const fridges = ['1', '2', '3'];
+  const user = { name: "Kiet", email: "kietkiet1109@yahoo.com", password: "123", user_type: "user", phone: "778-809-9869" };
+  res.render("setting", { css: "/css/setting.css", fridgeList: fridges, user: user });
 
 });
 
