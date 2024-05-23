@@ -377,49 +377,52 @@ app.get('/home', async (req, res) => {
     res.redirect("/");
     return;
   }
+
   const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
   if (fridgeArray.length === 0){
     res.redirect("/connection");
   } else {
-    let ID = req.query.id || fridgeArray[0]._id;
-    const fridge = fridgeArray.find(f => f._id.equals(ID));
-    res.render("home", {fridge, css: "/css/home.css" });
+    const name = req.query.name || fridgeArray[0].name;
+    const fridge = fridgeArray.find(f => f.name === name);
+    res.render("home", {fridge: fridge, css: "/css/home.css"});
   }
 });
 
 // =====List page begins=====
 app.get('/list', async (req, res) => {
-  if (!isValidSession(req)) {
-    res.redirect("/");
-    return;
-  }
-
-  const ID = req.query.id;
-  const fridgeArray = await fridgeCollection.find().toArray();
-  const fridge = fridgeArray.find(f => f._id.equals(ID));
-
-  const ingredientArray = await itemColletion.find().toArray();
-  let fridgeItems = [];
-  const numItems = Math.floor(Math.random() * 10 + 5);
-  while (fridgeItems.length < numItems) {
-    let item = ingredientArray[Math.floor(Math.random() * ingredientArray.length)];
-    if (!fridgeItems.includes(item)) {
-      fridgeItems.push(item);
+    if (!isValidSession(req)) {
+      res.redirect("/");
+      return;
     }
-  }
-  res.render("list", { fridge: fridge, ingredients: fridgeItems, css: "/css/list.css" });
+  
+    const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
+    const name = req.query.name || fridgeArray[0].name;
+    const fridge = fridgeArray.find(f => f.name === name);
+  
+    const ingredientArray = await itemColletion.find().toArray();
+    let fridgeItems = [];
+    const numItems = Math.floor(Math.random() * 10 + 5);
+    while (fridgeItems.length < numItems) {
+      let item = ingredientArray[Math.floor(Math.random() * ingredientArray.length)];
+      if (!fridgeItems.includes(item)) {
+        fridgeItems.push(item);
+      }
+    }
+    res.render("list", {fridge, ingredients: fridgeItems, css: "/css/list.css" });
 });
 
 // =====Setting page begins=====
-app.get('/setting', (req, res) => {
+app.get('/setting', async(req, res) => {
   if (!isValidSession(req)) {
     res.redirect("/");
     return;
   }
-  const fridges = ['1', '2', '3'];
-  const user = { name: "Kiet", email: "kietkiet1109@yahoo.com", password: "123", user_type: "user", phone: "778-809-9869" };
-  res.render("setting", { css: "/css/setting.css", fridgeList: fridges, user: user });
 
+  const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
+  const userArray = await userCollection.find().toArray();
+  const user = userArray.find(u => u.email === req.session.authenticated.email);
+
+  res.render("setting", {css: "/css/setting.css", fridgeList: fridgeArray, user: user});
 });
 
 // =====Method to save new fridge into MongoDB=====
@@ -429,10 +432,33 @@ app.post('/saveFridge', async (req, res) => {
   const fridgeUrl = `${ranFridge}.png`
   const owner = req.session.authenticated.email;
 
-
   const newFridge = {name: fridgeName, url: fridgeUrl, owner: owner};
   await fridgeCollection.insertOne(newFridge);
-  res.redirect(`home/${newFridge._id}`);
+  res.redirect("/home");
+});
+
+// =====Method to update phone number into MongoDB=====
+app.post('/savePhone', async (req, res) => {
+    const phone = req.body.phone;
+    const email = req.query.email;
+
+    const userArray = await userCollection.find().toArray();
+    const user = userArray.find(u => u.email === req.session.authenticated.email);
+    
+    user.phone = phone;
+    await userCollection.updateOne({email: user.email}, {$set: {phone: user.phone}});
+    res.redirect("/setting");
+});
+
+// =====Method to delete fridge in MongoDB=====
+app.post('/deleteFridge/:name', async (req, res) => {
+    const name = req.params.name;
+    
+    const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
+    const fridge = fridgeArray.find(f => f.name === name);
+
+    await fridgeCollection.deleteOne(fridge);
+    res.redirect("/setting");
 });
 
 // =====404 page begins=====
