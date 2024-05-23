@@ -1,0 +1,16 @@
+<li>
+    <div class="form-check d-flex align-items-center">
+        <div class="col-10 d-inline-flex">
+            <label class="form-check-label d-inline-flex">
+                <img src="https://img.spoonacular.com/ingredients_100x100/<%= ingredient.image %>" class="img-fluid">
+                <div class="ms-2">
+                    <h3 class=""><%= ingredient.original %></h3>
+                    <p>Quantity: <%= ingredient.amount %></p>
+                </div>
+            </label>
+        </div>
+        <div class="">
+            <input class="form-check-input ingredient" type="checkbox" value="<%= ingredient.name %>" style="width:1.5rem;height:1.5rem" hidden>
+        </div>
+    </div>
+</li>
