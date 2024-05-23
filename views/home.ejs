@@ -1,7 +1,8 @@
 <%- include("templates/header") %>
     <div id="fridgeImage" style="background-image: url('/image/fridge/<%= fridge.url %>');">
         <p id="fridgename"><%= fridge.name %></p>
-        <form action="/list?ID=<%= fridge._id %>" method="get">
+        <form action="/list" method="get">
+            <input type="hidden" name="name" value="<%= fridge.name %>">
             <button class="btn btn-secondary" id="eye">
                 <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
                     <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" stroke="black"></path>

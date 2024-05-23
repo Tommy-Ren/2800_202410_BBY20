@@ -10,8 +10,9 @@
             <% } else { %>
                 <div class="inputs">
                     <span>Phone Number (optional): </span>
-                    <input type="tel" id="phone" name="phone" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxlength="12">
-                    <form action="/setting" method="get">
+                    <form action="/savePhone" method="post">
+                        <input type="tel" id="phone" name="phone" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxlength="12">
+                        <input type="hidden" name="email" value="<%= user.email %>">
                         <button class="btn btn-secondary" id="fridgebutton">Save</button>
                     </form>
                 </div>
