@@ -1,7 +1,6 @@
 <%- include("templates/header") %>
-    <div class="container">
         <p id="fridgelist">Personal Profile</p>    
-        <div class="view">
+        <div class="user-info">
             <p><span>Name: </span><%= user.name %></p>
             <p><span>Email: </span><%= user.email %></p>
             <p><span>User Type: </span><%= user.user_type %></p>
@@ -19,7 +18,6 @@
             <% } %>
         </div>
         <hr id="divider">
-    
         <p id="fridgelist">List of fridge</p>
         <div class="row mb-3 text-left">
             <% for(let i = 0; i < fridgeList.length; i++) { %>
