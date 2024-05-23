@@ -1,5 +1,5 @@
 <%- include("templates/header") %>
-    <div id="fridgeImage" style="background-image: url('/image/fridge/<%= fridge.url %>');">
+    <div class="container" id="fridgeImage" style="background-image: url('/image/fridge/<%= fridge.url %>');">
         <p id="fridgename"><%= fridge.name %></p>
         <form action="/list" method="get">
             <input type="hidden" name="name" value="<%= fridge.name %>">

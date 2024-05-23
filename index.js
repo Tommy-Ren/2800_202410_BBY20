@@ -16,6 +16,7 @@ const app = express();
 const Joi = require("joi");
 const { name } = require('ejs');
 const { url } = require('inspector');
+const { send } = require("process");
 
 const expireTime = 60 * 60 * 1000; //expires after 1 hour  (hours * minutes * seconds * millis)
 
@@ -384,7 +385,7 @@ app.get('/home', async (req, res) => {
   } else {
     const name = req.query.name || fridgeArray[0].name;
     const fridge = fridgeArray.find(f => f.name === name);
-    res.render("home", {fridge: fridge, css: "/css/home.css"});
+    res.render("home", {fridge: fridge});
   }
 });
 
@@ -408,7 +409,12 @@ app.get('/list', async (req, res) => {
         fridgeItems.push(item);
       }
     }
-    res.render("list", {fridge, ingredients: fridgeItems, css: "/css/list.css" });
+    res.render("list", {fridge, ingredients: fridgeItems});
+});
+
+// =====Recipe page begins=====
+app.get('/recipe', async (req, res) => {
+  res.render('recipe', { css: "/css/recipe.css"});
 });
 
 // =====Setting page begins=====
@@ -421,8 +427,7 @@ app.get('/setting', async(req, res) => {
   const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
   const userArray = await userCollection.find().toArray();
   const user = userArray.find(u => u.email === req.session.authenticated.email);
-
-  res.render("setting", {css: "/css/setting.css", fridgeList: fridgeArray, user: user});
+  res.render("setting", {fridgeList: fridgeArray, user: user});
 });
 
 // =====Method to save new fridge into MongoDB=====
