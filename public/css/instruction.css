@@ -2,9 +2,9 @@
     display: block;
     text-align: center;
     font-size: 1.9rem;
-    margin-top: 3rem;
+    margin-top: 1rem;
     margin-bottom: 1rem;
-
+    font-weight: bold;
 }
 .description{
     display: inline-block;
@@ -16,23 +16,27 @@
 }
 
 .cover {
-    margin-top: 15rem;
+    margin-top: 1.5rem;
     position: absolute; 
     z-index:2;
 }
 
-
-.content{
-    margin-top: 15rem;
+.num-content{
     position: absolute; 
     z-index:1; 
+}
+
+.content{
+    margin-top: 1.5rem;
+    /* position: absolute; 
+    z-index:1;  */
     margin-left:70px;
     display: inline-block;
     margin-right:auto;
 }
 
 .instruction-img{
-    width: 100vw;
+    width: 70vw;
 }
 #instruction1 {
     margin-top: 18px;
@@ -43,7 +47,7 @@
 }
 
 #instruction3 {
-    margin-top: 24px;
+    margin-top: 43px;
 }
 
 #num2 {
@@ -51,16 +55,16 @@
 }
 
 #num3{
-    margin-top: 28px;
-}
-
-form{
-    margin-top: 1rem;
-    text-align: center;
+    margin-top: 16px;
 }
 
 .btn{
-    height: 3rem;
+    font-size: 1.8rem;
+    height: 4rem;
     width: 10rem;
-    font-size: 1.6rem;
 }
+.continue{
+    margin-top: 360px;
+    text-align: center;
+}
+
