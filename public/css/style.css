@@ -173,7 +173,91 @@ li {
 
 
 /************************ Shopping Page  ***************************/
+.shopping {
+    width: 100vw;
+    height: auto;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
+.toppage {
+    display: flex;
+    align-items: center;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    width: 100vw;
+    height: 10vh;
+}
+
+#back {
+    background-color: #D9D9D9;
+    border-color: #b4b4b8;
+    border-width: 3px;
+    margin-left: 20px;
+    font-size: 25px;
+    color: black;
+}
+
+#expand {
+    background-color: #D9D9D9;
+    border-color: #b4b4b8;
+    border-width: 3px;
+    margin-left: auto;
+    margin-right: 20px;
+    font-size: 25px;
+    color: black;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    border-bottom: 1px solid #b4b4b8;
+    height: 5vh;
+}
+
+.search input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ffffff;
+    height: 100%;
+}
+
+.barcode {
+    height: 50px;
+    margin-right: 20px;
+}
+
+.itemList {
+    width: 100vw;
+    height: auto;
+    margin-top: 20px;
+    justify-content: center;
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.addButton {
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    height: auto;
+}
+
+#add {
+    width: 90vw;
+    background-color: #D9D9D9;
+    border-color: #b4b4b8;
+    border-width: 3px;
+    margin-top: 10px;
+    font-size: 25px;
+    color: black;
+}
 
 /************************ Setting Page  ***************************/
 .user-info {

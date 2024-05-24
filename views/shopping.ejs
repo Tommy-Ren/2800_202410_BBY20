@@ -1,0 +1,39 @@
+<%- include("templates/header") %>
+    <div class="shopping">
+        <div class="toppage" style="background-image: url('/image/fridge/<%= fridge.url %>');">
+            <form action="/home" method="get">
+                <button class="btn btn-secondary" id="back">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"></path>
+                    </svg>
+                </button>
+            </form>
+            <button class="btn btn-secondary" id="expand">
+                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707m4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707m0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707m-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="search">
+            <input type="text" placeholder="Search or scan to add a new item">
+            <img src="/image/barcode.png" class="barcode">
+        </div>
+    </div>
+    <div class="itemList">
+        <ul>
+            <% shopping.forEach(item => { %>
+                <%- include("templates/shoppingItem", {item}) %>
+            <% }) %>
+        </ul>
+    </div>
+    <div class="addButton">
+        <% if (shopping.length > 0) { %>
+            <form action="/addList" method="post">
+                <button class="btn btn-secondary" id="add">Add Shopping List</button>
+            </form>
+        <% } else { %>
+            <p></p>
+        <% } %>
+    </div>
+<%- include("templates/navbar") %>
+<%- include("templates/footer") %>

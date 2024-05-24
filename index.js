@@ -56,6 +56,8 @@ const db = database.db(mongodb_database)
 const userCollection = db.collection('users');
 const itemColletion = db.collection('items');
 const fridgeCollection = db.collection('fridge');
+const shopping = db.collection('shopping');
+const list = db.collection('list');
 
 app.use(
   session({
@@ -464,6 +466,25 @@ app.post('/deleteFridge/:name', async (req, res) => {
 
     await fridgeCollection.deleteOne(fridge);
     res.redirect("/setting");
+});
+
+// =====Shopping list page begins=====
+app.get('/shopping', async (req, res) => {
+    if (!isValidSession(req)) {
+      res.redirect("/");
+      return;
+    }
+
+    const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
+    const shoppingArray = await shopping.find().toArray();
+    let shoppingItems = [];
+    while (shoppingItems.length < 3) {
+        let item = shoppingArray[Math.floor(Math.random() * shoppingArray.length)];
+        if (!shoppingItems.includes(item)) {
+          shoppingItems.push(item);
+        }
+    }
+    res.render('shopping', {shopping: shoppingItems, fridge: fridgeArray[0], css: "/css/style.css"});
 });
 
 // =====404 page begins=====
