@@ -407,24 +407,24 @@ app.get('/list', sessionValidation, async (req, res) => {
     }
   }
 
-  const ingredientArray2 = await itemColletion2.find().toArray();
-  let fridgeItems2 = [];
-  const numItems2 = Math.floor(Math.random() * 20 + 10);
+  // const ingredientArray2 = await itemColletion2.find().toArray();
+  // let fridgeItems2 = [];
+  // const numItems2 = Math.floor(Math.random() * 20 + 10);
   
-  while (fridgeItems2.length < numItems2) {
-    let item2 = ingredientArray2[Math.floor(Math.random() * ingredientArray2.length)];
-    let amount = Math.floor(Math.random() * 100 + 1);
+  // while (fridgeItems2.length < numItems2) {
+  //   let item2 = ingredientArray2[Math.floor(Math.random() * ingredientArray2.length)];
+  //   let amount = Math.floor(Math.random() * 100 + 1);
     
-    if (!fridgeItems2.includes(item2)) {
-      try {
-        const response = await fetch(`https://api.spoonacular.com/food/ingredients/${item2._id}/information?apiKey=${api_key}&amount=${amount}`);
-        const data = await response.json();
-        fridgeItems2.push(data);
-      } catch (error) {
-        console.error('Error fetching item information:', error);
-      }
-    }
-  }  
+  //   if (!fridgeItems2.includes(item2)) {
+  //     try {
+  //       const response = await fetch(`https://api.spoonacular.com/food/ingredients/${item2._id}/information?apiKey=${api_key}&amount=${amount}`);
+  //       const data = await response.json();
+  //       fridgeItems2.push(data);
+  //     } catch (error) {
+  //       console.error('Error fetching item information:', error);
+  //     }
+  //   }
+  // }  
 
   res.render("list", { fridge, ingredients: fridgeItems });
 });
