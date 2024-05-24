@@ -435,6 +435,13 @@ app.post('/saveFridge', async (req, res) => {
   res.redirect(`home/${newFridge._id}`);
 });
 
+// =====shoppingListPreview begins=====
+app.get('/shoppingListPreview', (req,res) => {
+  res.render("shoppingListPreview", {css: "/css/shoppingListPreview.css"});
+})
+
+// =====shoppingListPreview ends=====
+
 // =====404 page begins=====
 app.get("*", (req, res) => {
   res.status(404);
