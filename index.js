@@ -59,7 +59,7 @@ const itemColletion = db.collection('items');
 const itemColletion2 = db.collection('newItems');
 const fridgeCollection = db.collection('fridge');
 const shopping = db.collection('shopping');
-const list = db.collection('list');
+const listCollection = db.collection('list');
 
 app.use(
   session({
@@ -510,9 +510,27 @@ app.get('/shopping', async (req, res) => {
     res.render('shopping', {shopping: shoppingItems, fridge: fridgeArray[0], css: "/css/style.css"});
 });
 
+// =====Method to save new fridge into MongoDB=====
+app.post('/addList', async (req, res) => {
+    const listArray = await listCollection.find({owner: req.session.authenticated.email}).toArray();
+    const listID = listArray.length + 1;
+    const date = new Date.toLocaleDateString();
+    const owner = req.session.authenticated.email;
+
+    const newList = {_id: listID, date: date, owner: owner};
+    await listCollection.insertOne(newList);
+    res.redirect("/shoppingListPreview");
+});
+
 // =====shoppingListPreview begins=====
-app.get('/shoppingListPreview', (req,res) => {
-  res.render("shoppingListPreview", {css: "/css/shoppingListPreview.css"});
+app.get('/shoppingListPreview', async(req,res) => {
+    if (!isValidSession(req)) {
+      res.redirect("/");
+      return;
+    }
+
+    const listArray = await listCollection.find({owner: req.session.authenticated.email}).toArray();
+    res.render("shoppingListPreview", {lists: listArray, css: "/css/shoppingListPreview.css"});
 })
 
 // =====404 page begins=====

@@ -1,61 +1,62 @@
 <%- include("templates/header") %>
-<div class="containter">
-    <div class="easterEggHeader">
-        <!-- <input class="sortIcon"><i class="bi bi-sliders"></i></input> -->
-        <div class="sortIcon"> 
-            <div class="toggle">
-                <span class="top_line common"></span>
-                <span class="middle_line common"></span>
-                <span class="bottom_line common"></span>
+    <div class="topbar-containter">
+        <div class="easterEggHeader">
+            <div class="sortIcon"> 
+                <div class="toggle">
+                    <span class="top_line common"></span>
+                    <span class="middle_line common"></span>
+                    <span class="bottom_line common"></span>
+                </div>
             </div>
+
+            <div id="shoppingList" class="easterEggChange">Shopping List</div>
         </div>
 
+        <div class="slider">
+            <ul>
+                <div class="sortType"><i class="bi bi-calendar4-week"></i>Sort by date</div>
+                <li class="sortOption"><i class="bi bi-sort-numeric-up"></i>Ascending</li>
+                <br>
+                <li class="sortOption"><i class="bi bi-sort-numeric-down"></i>Descending</li>
+            </ul>
 
-        <div id="shoppingList" class="easterEggChange">Shopping List</div>
+            <ul>
+                <div class="sortType"><i class="bi bi-cart3"></i>Sort by number of items</div>
+                <li class="sortOption"><i class="bi bi-sort-numeric-up"></i>Ascending</li>
+                <br>
+                <li class="sortOption"><i class="bi bi-sort-numeric-down"></i>Descending</li>
+            </ul>
+        </div>
     </div>
-
-    <div class="slider">
+    <div class="list-container">
         <ul>
-            <div class="sortType"><i class="bi bi-calendar4-week"></i>Sort by date</div>
-            <li class="sortOption"><i class="bi bi-sort-numeric-up"></i>Ascending</li>
-            <br>
-            <li class="sortOption"><i class="bi bi-sort-numeric-down"></i>Descending</li>
+            <% lists.forEach(list => { %>
+                <%- include("templates/list", {list}) %>
+            <% }) %>
         </ul>
-
-        <ul>
-            <div class="sortType"><i class="bi bi-cart3"></i>Sort by number of items</div>
-            <li class="sortOption"><i class="bi bi-sort-numeric-up"></i>Ascending</li>
-            <br>
-            <li class="sortOption"><i class="bi bi-sort-numeric-down"></i>Descending</li>
-        </ul>
-    </div>
-
-
     </div>
 
     <script>
         document.querySelector('.toggle').addEventListener('dblclick', function() {
-            
+                
             var slider = document.querySelector('.slider');
-            
-            
+                
+                
             var div = document.querySelector('.easterEggChange');
             var newText = div.innerHTML.replace('Shopping List', 'Fun, right babe? 😘');
             div.innerHTML = newText;
-            
+                
             setTimeout(function() {
                 var originalText = newText.replace('Fun, right babe? 😘', 'Shopping List');
                 div.innerHTML = originalText;
             }, 800);
             slider.style.display = 'block';
-            
         });
-        
+            
         document.querySelector('.toggle').addEventListener('click', function() {
             this.classList.toggle('clicked');
             var slider = document.querySelector('.slider');
             if (slider.style.display == 'block') {
-              //  slider.style.transition = '4s ease-out';
                 slider.style.opacity = '0';
                 slider.style.display = 'none';
             } else {
@@ -63,7 +64,6 @@
                 slider.style.display = 'block';
             }
         });
-        
-        
     </script>
+<%- include("templates/navbar") %>
 <%- include("templates/footer") %>
