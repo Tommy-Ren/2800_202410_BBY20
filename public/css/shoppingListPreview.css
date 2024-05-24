@@ -1,0 +1,144 @@
+.containter{
+    margin: 2rem;
+   
+}
+
+.easterEggChange {
+    display: inline-block;
+    color: white;
+    margin-left: 7rem;
+}
+
+.easterEggHeader{
+    margin-bottom: 2rem;
+}
+
+
+
+.easterEggChange{
+    font-weight:580;
+    font-size: 24px;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: rgb(55, 171, 46); 
+    cursor: default;
+}
+
+.slider {
+    color:white;
+    padding: 15px;
+    border-radius: 25px;
+    height: 100%;
+    width: 380px;
+    font-size: large;
+    background-color: rgb(55, 171, 46); 
+    padding-right: 1.5rem ;
+    box-shadow: 0 0 10px rgb(55, 171, 46);
+    
+}
+
+ul li{
+
+    list-style-type: none;
+}
+
+.bi-calendar4-week , .bi-cart3, .bi-sort-numeric-up, .bi-sort-numeric-down{
+    margin-right: 15px;
+    font-size: 20px;
+}
+
+.sortType{
+    font-size: 22px;
+    font-weight: 600;
+    cursor: default;
+}
+
+li{
+    margin-top: 5px;
+    font-size: 18px;
+    border-radius: 25px;
+    padding: 12px;
+    display: inline-block;
+}
+
+li:hover{
+    cursor: pointer;
+    background-color: #2d8826 ;
+
+    
+}
+
+input{
+    /* display: none;
+    visibility: hidden;
+    -webkit-appearance: none; */
+    /* font-size: 50px; */
+    /* visibility: hidden; */
+    width: 55px;
+    height: 55px;
+
+}
+
+.toggle{
+    position: absolute;
+    z-index: 1;
+    height: 55px;
+    width: 55px;
+    position: absolute;
+    border-radius: 50%;
+    cursor:pointer;
+    background-color: rgb(55, 171, 46);
+}
+
+.toggle .common {
+    position: absolute;
+    height: 4px ;
+    width: 30px;
+    background-color: white;
+    border-radius: 50px;
+    transition: 0.3 ease;
+}
+
+
+.toggle .top_line {
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.toggle .middle_line {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.toggle .bottom_line {
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.toggle.clicked .top_line{
+    left: 22%;
+    top: 45%;
+    width: 30px;
+    transform: rotate(45deg);
+}
+
+.toggle.clicked .bottom_line{
+    left: 22%;
+    top: 45%;
+    width: 30px;
+    transform: rotate(-45deg);
+}
+
+
+.toggle.clicked .middle_line{
+    opacity: 0;
+}
+
+
+input:checked ~ .slider{
+    transform: translateX(0);
+}
+
