@@ -434,6 +434,12 @@ app.get('/recipe', async (req, res) => {
   res.render('recipe', { css: "/css/recipe.css" });
 });
 
+app.get(`/eachRecipe`, async (req, res) => {
+
+  res.render("eachRecipe");
+
+});
+
 // =====Setting page begins=====
 app.get('/setting', async (req, res) => {
   if (!isValidSession(req)) {
