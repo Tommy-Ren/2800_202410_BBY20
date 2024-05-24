@@ -489,6 +489,13 @@ app.post('/deleteFridge/:name', async (req, res) => {
   res.redirect("/setting");
 });
 
+// =====shoppingListPreview begins=====
+app.get('/shoppingListPreview', (req,res) => {
+  res.render("shoppingListPreview", {css: "/css/shoppingListPreview.css"});
+})
+
+// =====shoppingListPreview ends=====
+
 // =====404 page begins=====
 app.get("*", (req, res) => {
   res.status(404);
