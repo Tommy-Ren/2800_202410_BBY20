@@ -29,6 +29,7 @@ const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 const jwt_secret = process.env.JWT_SECRET;
+const api_key = process.env.API_KEY;
 /* END secret section */
 
 // to use mongoDB -> access db
@@ -55,6 +56,7 @@ var mongoStore = MongoStore.create({
 const db = database.db(mongodb_database)
 const userCollection = db.collection('users');
 const itemColletion = db.collection('items');
+const itemColletion2 = db.collection('newItems');
 const fridgeCollection = db.collection('fridge');
 const shopping = db.collection('shopping');
 const list = db.collection('list');
@@ -381,55 +383,76 @@ app.get('/home', async (req, res) => {
     return;
   }
 
-  const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
-  if (fridgeArray.length === 0){
+  const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
+  if (fridgeArray.length === 0) {
     res.redirect("/connection");
   } else {
     const name = req.query.name || fridgeArray[0].name;
     const fridge = fridgeArray.find(f => f.name === name);
-    res.render("home", {fridge: fridge});
+    res.render("home", { fridge: fridge });
   }
 });
 
 // =====List page begins=====
-app.get('/list', async (req, res) => {
-    if (!isValidSession(req)) {
-      res.redirect("/");
-      return;
+app.get('/list', sessionValidation, async (req, res) => {
+  const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
+  const name = req.query.name || fridgeArray[0].name;
+  const fridge = fridgeArray.find(f => f.name === name);
+
+  const ingredientArray = await itemColletion.find().toArray();
+  let fridgeItems = [];
+  const numItems = Math.floor(Math.random() * 10 + 5);
+  while (fridgeItems.length < numItems) {
+    let item = ingredientArray[Math.floor(Math.random() * ingredientArray.length)];
+    if (!fridgeItems.includes(item)) {
+      fridgeItems.push(item);
     }
+  }
+
+  const ingredientArray2 = await itemColletion2.find().toArray();
+  let fridgeItems2 = [];
+  const numItems2 = Math.floor(Math.random() * 20 + 10);
   
-    const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
-    const name = req.query.name || fridgeArray[0].name;
-    const fridge = fridgeArray.find(f => f.name === name);
-  
-    const ingredientArray = await itemColletion.find().toArray();
-    let fridgeItems = [];
-    const numItems = Math.floor(Math.random() * 10 + 5);
-    while (fridgeItems.length < numItems) {
-      let item = ingredientArray[Math.floor(Math.random() * ingredientArray.length)];
-      if (!fridgeItems.includes(item)) {
-        fridgeItems.push(item);
+  while (fridgeItems2.length < numItems2) {
+    let item2 = ingredientArray2[Math.floor(Math.random() * ingredientArray2.length)];
+    let amount = Math.floor(Math.random() * 100 + 1);
+    
+    if (!fridgeItems2.includes(item2)) {
+      try {
+        const response = await fetch(`https://api.spoonacular.com/food/ingredients/${item2._id}/information?apiKey=${api_key}&amount=${amount}`);
+        const data = await response.json();
+        fridgeItems2.push(data);
+      } catch (error) {
+        console.error('Error fetching item information:', error);
       }
     }
-    res.render("list", {fridge, ingredients: fridgeItems});
+  }  
+
+  res.render("list", { fridge, ingredients: fridgeItems });
 });
 
 // =====Recipe page begins=====
 app.get('/recipe', async (req, res) => {
-  res.render('recipe', { css: "/css/recipe.css"});
+  res.render('recipe', { css: "/css/recipe.css" });
+});
+
+app.get(`/eachRecipe`, async (req, res) => {
+
+  res.render("eachRecipe");
+
 });
 
 // =====Setting page begins=====
-app.get('/setting', async(req, res) => {
+app.get('/setting', async (req, res) => {
   if (!isValidSession(req)) {
     res.redirect("/");
     return;
   }
 
-  const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
+  const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
   const userArray = await userCollection.find().toArray();
   const user = userArray.find(u => u.email === req.session.authenticated.email);
-  res.render("setting", {fridgeList: fridgeArray, user: user});
+  res.render("setting", { fridgeList: fridgeArray, user: user });
 });
 
 // =====Method to save new fridge into MongoDB=====
@@ -439,33 +462,33 @@ app.post('/saveFridge', async (req, res) => {
   const fridgeUrl = `${ranFridge}.png`
   const owner = req.session.authenticated.email;
 
-  const newFridge = {name: fridgeName, url: fridgeUrl, owner: owner};
+  const newFridge = { name: fridgeName, url: fridgeUrl, owner: owner };
   await fridgeCollection.insertOne(newFridge);
   res.redirect("/home");
 });
 
 // =====Method to update phone number into MongoDB=====
 app.post('/savePhone', async (req, res) => {
-    const phone = req.body.phone;
-    const email = req.query.email;
+  const phone = req.body.phone;
+  const email = req.query.email;
 
-    const userArray = await userCollection.find().toArray();
-    const user = userArray.find(u => u.email === req.session.authenticated.email);
-    
-    user.phone = phone;
-    await userCollection.updateOne({email: user.email}, {$set: {phone: user.phone}});
-    res.redirect("/setting");
+  const userArray = await userCollection.find().toArray();
+  const user = userArray.find(u => u.email === req.session.authenticated.email);
+
+  user.phone = phone;
+  await userCollection.updateOne({ email: user.email }, { $set: { phone: user.phone } });
+  res.redirect("/setting");
 });
 
 // =====Method to delete fridge in MongoDB=====
 app.post('/deleteFridge/:name', async (req, res) => {
-    const name = req.params.name;
-    
-    const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
-    const fridge = fridgeArray.find(f => f.name === name);
+  const name = req.params.name;
 
-    await fridgeCollection.deleteOne(fridge);
-    res.redirect("/setting");
+  const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
+  const fridge = fridgeArray.find(f => f.name === name);
+
+  await fridgeCollection.deleteOne(fridge);
+  res.redirect("/setting");
 });
 
 // =====Shopping list page begins=====
@@ -486,6 +509,11 @@ app.get('/shopping', async (req, res) => {
     }
     res.render('shopping', {shopping: shoppingItems, fridge: fridgeArray[0], css: "/css/style.css"});
 });
+
+// =====shoppingListPreview begins=====
+app.get('/shoppingListPreview', (req,res) => {
+  res.render("shoppingListPreview", {css: "/css/shoppingListPreview.css"});
+})
 
 // =====404 page begins=====
 app.get("*", (req, res) => {
