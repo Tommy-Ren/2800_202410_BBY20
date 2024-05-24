@@ -16,6 +16,7 @@ const app = express();
 const Joi = require("joi");
 const { name } = require('ejs');
 const { url } = require('inspector');
+const { send } = require("process");
 
 const expireTime = 60 * 60 * 1000; //expires after 1 hour  (hours * minutes * seconds * millis)
 
@@ -28,6 +29,7 @@ const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 const jwt_secret = process.env.JWT_SECRET;
+const api_key = process.env.API_KEY;
 /* END secret section */
 
 // to use mongoDB -> access db
@@ -55,6 +57,7 @@ const db = database.db(mongodb_database)
 const userCollection = db.collection('users');
 const itemColletion = db.collection('items');
 const fridgeCollection = db.collection('fridge');
+const itemColletion2 = db.collection('newItems');
 
 app.use(
   session({
@@ -377,26 +380,22 @@ app.get('/home', async (req, res) => {
     res.redirect("/");
     return;
   }
-  const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
-  if (fridgeArray.length === 0){
+
+  const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
+  if (fridgeArray.length === 0) {
     res.redirect("/connection");
   } else {
-    let ID = req.query.id || fridgeArray[0]._id;
-    const fridge = fridgeArray.find(f => f._id.equals(ID));
-    res.render("home", {fridge, css: "/css/home.css" });
+    const name = req.query.name || fridgeArray[0].name;
+    const fridge = fridgeArray.find(f => f.name === name);
+    res.render("home", { fridge: fridge });
   }
 });
 
 // =====List page begins=====
-app.get('/list', async (req, res) => {
-  if (!isValidSession(req)) {
-    res.redirect("/");
-    return;
-  }
-
-  const ID = req.query.id;
-  const fridgeArray = await fridgeCollection.find().toArray();
-  const fridge = fridgeArray.find(f => f._id.equals(ID));
+app.get('/list', sessionValidation, async (req, res) => {
+  const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
+  const name = req.query.name || fridgeArray[0].name;
+  const fridge = fridgeArray.find(f => f.name === name);
 
   const ingredientArray = await itemColletion.find().toArray();
   let fridgeItems = [];
@@ -407,19 +406,51 @@ app.get('/list', async (req, res) => {
       fridgeItems.push(item);
     }
   }
-  res.render("list", { fridge: fridge, ingredients: fridgeItems, css: "/css/list.css" });
+
+  const ingredientArray2 = await itemColletion2.find().toArray();
+  let fridgeItems2 = [];
+  const numItems2 = Math.floor(Math.random() * 20 + 10);
+  
+  while (fridgeItems2.length < numItems2) {
+    let item2 = ingredientArray2[Math.floor(Math.random() * ingredientArray2.length)];
+    let amount = Math.floor(Math.random() * 100 + 1);
+    
+    if (!fridgeItems2.includes(item2)) {
+      try {
+        const response = await fetch(`https://api.spoonacular.com/food/ingredients/${item2._id}/information?apiKey=${api_key}&amount=${amount}`);
+        const data = await response.json();
+        fridgeItems2.push(data);
+      } catch (error) {
+        console.error('Error fetching item information:', error);
+      }
+    }
+  }  
+
+  res.render("list", { fridge, ingredients: fridgeItems });
+});
+
+// =====Recipe page begins=====
+app.get('/recipe', async (req, res) => {
+  res.render('recipe', { css: "/css/recipe.css" });
+});
+
+app.get(`/eachRecipe`, async (req, res) => {
+
+  res.render("eachRecipe");
+
 });
 
 // =====Setting page begins=====
-app.get('/setting', (req, res) => {
+app.get('/setting', async (req, res) => {
   if (!isValidSession(req)) {
     res.redirect("/");
     return;
   }
-  const fridges = ['1', '2', '3'];
-  const user = { name: "Kiet", email: "kietkiet1109@yahoo.com", password: "123", user_type: "user", phone: "778-809-9869" };
-  res.render("setting", { css: "/css/setting.css", fridgeList: fridges, user: user });
 
+  const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
+  const userArray = await userCollection.find().toArray();
+  const user = userArray.find(u => u.email === req.session.authenticated.email);
+  res.render("setting", { fridgeList: fridgeArray, user: user });
 });
 
 // =====Method to save new fridge into MongoDB=====
@@ -429,10 +460,33 @@ app.post('/saveFridge', async (req, res) => {
   const fridgeUrl = `${ranFridge}.png`
   const owner = req.session.authenticated.email;
 
-
-  const newFridge = {name: fridgeName, url: fridgeUrl, owner: owner};
+  const newFridge = { name: fridgeName, url: fridgeUrl, owner: owner };
   await fridgeCollection.insertOne(newFridge);
-  res.redirect(`home/${newFridge._id}`);
+  res.redirect("/home");
+});
+
+// =====Method to update phone number into MongoDB=====
+app.post('/savePhone', async (req, res) => {
+  const phone = req.body.phone;
+  const email = req.query.email;
+
+  const userArray = await userCollection.find().toArray();
+  const user = userArray.find(u => u.email === req.session.authenticated.email);
+
+  user.phone = phone;
+  await userCollection.updateOne({ email: user.email }, { $set: { phone: user.phone } });
+  res.redirect("/setting");
+});
+
+// =====Method to delete fridge in MongoDB=====
+app.post('/deleteFridge/:name', async (req, res) => {
+  const name = req.params.name;
+
+  const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
+  const fridge = fridgeArray.find(f => f.name === name);
+
+  await fridgeCollection.deleteOne(fridge);
+  res.redirect("/setting");
 });
 
 // =====shoppingListPreview begins=====

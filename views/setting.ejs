@@ -1,7 +1,6 @@
 <%- include("templates/header") %>
-    <div class="container">
         <p id="fridgelist">Personal Profile</p>    
-        <div class="view">
+        <div class="user-info">
             <p><span>Name: </span><%= user.name %></p>
             <p><span>Email: </span><%= user.email %></p>
             <p><span>User Type: </span><%= user.user_type %></p>
@@ -10,15 +9,15 @@
             <% } else { %>
                 <div class="inputs">
                     <span>Phone Number (optional): </span>
-                    <input type="tel" id="phone" name="phone" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxlength="12">
-                    <form action="/setting" method="get">
+                    <form action="/savePhone" method="post">
+                        <input type="tel" id="phone" name="phone" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxlength="12">
+                        <input type="hidden" name="email" value="<%= user.email %>">
                         <button class="btn btn-secondary" id="fridgebutton">Save</button>
                     </form>
                 </div>
             <% } %>
         </div>
         <hr id="divider">
-    
         <p id="fridgelist">List of fridge</p>
         <div class="row mb-3 text-left">
             <% for(let i = 0; i < fridgeList.length; i++) { %>
@@ -34,6 +33,7 @@
         <form action="/logout" method="get">
             <button class="btn btn-secondary" id="fridgebutton">Logout</button>
         </form>
+        <br><br><br><br>
     </div>
     
 <%- include("templates/navbar") %>
