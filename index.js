@@ -514,7 +514,7 @@ app.get('/shopping', async (req, res) => {
 app.post('/addList', async (req, res) => {
     const listArray = await listCollection.find({owner: req.session.authenticated.email}).toArray();
     const listID = listArray.length + 1;
-    const date = new Date.toLocaleDateString();
+    const date = new Date().toLocaleDateString();
     const owner = req.session.authenticated.email;
 
     const newList = {_id: listID, date: date, owner: owner};
