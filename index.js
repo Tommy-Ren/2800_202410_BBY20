@@ -7,6 +7,7 @@ const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const ObjectId = require("mongodb").ObjectId;
 const nodemailer = require("nodemailer");
+const bodyParser = require('body-parser');
 const saltRounds = 12;
 
 const port = 3000;
@@ -46,6 +47,8 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(__dirname + "/public"));
+
+app.use(bodyParser.json());
 
 var mongoStore = MongoStore.create({
   mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/sessions`,
@@ -517,7 +520,7 @@ app.post('/addList', async (req, res) => {
     const date = new Date().toLocaleDateString();
     const owner = req.session.authenticated.email;
 
-    const newList = {_id: listID, date: date, owner: owner};
+    const newList = {key: listID, date: date, owner: owner};
     await listCollection.insertOne(newList);
     res.redirect("/shoppingListPreview");
 });
