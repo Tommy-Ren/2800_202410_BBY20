@@ -57,7 +57,8 @@ const db = database.db(mongodb_database)
 const userCollection = db.collection('users');
 const itemColletion = db.collection('items');
 const fridgeCollection = db.collection('fridge');
-const itemColletion2 = db.collection('newItems');
+// const itemColletion2 = db.collection('newItems');
+const recipesCollection = db.collection('recipes');
 
 app.use(
   session({
@@ -429,9 +430,19 @@ app.get('/list', sessionValidation, async (req, res) => {
   res.render("list", { fridge, ingredients: fridgeItems });
 });
 
-// =====Recipe page begins=====
-app.get('/recipe', async (req, res) => {
-  res.render('recipe', { css: "/css/recipe.css" });
+app.get('/recipes', async (req, res) => {
+  const recipes = await recipesCollection.find().toArray();
+  let numRecipes = Math.floor(Math.random() * 11);
+
+  let tailoredRecipes = [];
+  while (tailoredRecipes.length < numRecipes) {
+    let recipe = recipes[Math.floor(Math.random() * recipes.length)];
+    if (!tailoredRecipes.includes(recipe)) {
+      tailoredRecipes.push(recipe);
+    }
+  }
+
+  res.render("recipes", { recipes: tailoredRecipes });
 });
 
 app.get(`/eachRecipe`, async (req, res) => {

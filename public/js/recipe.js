@@ -56,7 +56,7 @@ const readCheckboxValue = async () => {
     
     // Redirect to /recipe page with filtered recipes
     // window.location.href = '/recipe?recipes=' + encodeURIComponent(JSON.stringify(filteredRecipes));
-    window.location.href = '/recipe'
+    window.location.href = '/recipes'
 };
 
 // Call the function when a button is clicked or any other event triggers
