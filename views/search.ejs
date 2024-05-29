@@ -19,7 +19,6 @@
             <img src="/image/barcode.png" class="barcode">
         </div>
     </div>
-
     <div class="searchItem">
         <ul>
             <% searchItem.forEach(item => { %>
@@ -27,17 +26,10 @@
             <% }) %>
         </ul>
     </div>
-    <div class="itemList">
-        <ul>
-            <% shopping.forEach(item => { %>
-                <%- include("templates/shoppingItem", {item}) %>
-            <% }) %>
-        </ul>
-    </div>
     <div class="addButton">
         <% if (shopping.length > 0) { %>
-            <form action="/addList" method="post">
-                <button class="btn btn-secondary" id="add">Add Shopping List</button>
+            <form action="/shopping" method="get">
+                <button class="btn btn-secondary" id="add">Done</button>
             </form>
         <% } else { %>
             <p></p>

@@ -60,6 +60,7 @@ const itemColletion2 = db.collection('newItems');
 const fridgeCollection = db.collection('fridge');
 const shopping = db.collection('shopping');
 const listCollection = db.collection('list');
+const shoppingListCollection = db.collection('shoppingList');
 
 app.use(
   session({
@@ -499,25 +500,38 @@ app.get('/shopping', async (req, res) => {
     }
 
     const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
-    const shoppingArray = await shopping.find().toArray();
-    let shoppingItems = [];
-    while (shoppingItems.length < 3) {
-        let item = shoppingArray[Math.floor(Math.random() * shoppingArray.length)];
-        if (!shoppingItems.includes(item)) {
-          shoppingItems.push(item);
-        }
-    }
-    res.render('shopping', {shopping: shoppingItems, fridge: fridgeArray[0], css: "/css/style.css"});
+    // const shoppingArray = await shopping.find().toArray();
+    // let shoppingItems = [];
+    // while (shoppingItems.length < 3) {
+    //     let item = shoppingArray[Math.floor(Math.random() * shoppingArray.length)];
+    //     if (!shoppingItems.includes(item)) {
+    //       shoppingItems.push(item);
+    //     }
+    // }
+    
+    res.render('shopping', {shopping: shoppingArray, fridge: fridgeArray[0], css: "/css/style.css"});
 });
 
-// =====Method to save new fridge into MongoDB=====
+
+
+// =====Method to save new shoppingList into MongoDB===== Phuong CODE
+app.post('/searchItem', async (req, res) => {
+  const input = req.query.search;
+  const searchArray = await shoppingListCollection.find(i => i.name == input || i.type == input).toArray();
+  /** If user input === name or type
+   * 
+   */
+    res.render('search', {search: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
+});
+
+// =====Method to save new shoppingList into MongoDB=====
 app.post('/addList', async (req, res) => {
     const listArray = await listCollection.find({owner: req.session.authenticated.email}).toArray();
     const listID = listArray.length + 1;
     const date = new Date().toLocaleDateString();
     const owner = req.session.authenticated.email;
 
-    const newList = {_id: listID, date: date, owner: owner};
+    const newList = {key: listID, date: date, owner: owner};
     await listCollection.insertOne(newList);
     res.redirect("/shoppingListPreview");
 });
@@ -528,10 +542,11 @@ app.get('/shoppingListPreview', async(req,res) => {
       res.redirect("/");
       return;
     }
-
     const listArray = await listCollection.find({owner: req.session.authenticated.email}).toArray();
-    res.render("shoppingListPreview", {lists: listArray, css: "/css/shoppingListPreview.css"});
+    res.render("shoppingListPreview", {listArray, css: "/css/shoppingListPreview.css"});
 })
+
+
 
 // =====404 page begins=====
 app.get("*", (req, res) => {
@@ -542,6 +557,8 @@ app.get("*", (req, res) => {
     error: "Page not found!",
   });
 });
+
+
 
 app.listen(port, () => {
   console.log("Node application listening on port " + port);
