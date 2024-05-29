@@ -435,7 +435,7 @@ app.get('/list', sessionValidation, async (req, res) => {
   res.render("list", { fridge, ingredients: fridgeItems });
 });
 
-app.get('/recipes', async (req, res) => {
+app.get('/recipes', sessionValidation, async (req, res) => {
   const recipes = await recipesCollection.find().toArray();
   let numRecipes = Math.floor(Math.random() * 11);
 
@@ -450,10 +450,22 @@ app.get('/recipes', async (req, res) => {
   res.render("recipes", { recipes: tailoredRecipes });
 });
 
-app.get(`/eachRecipe`, async (req, res) => {
+app.get('/eachRecipe', sessionValidation, async (req, res) => {
+  const { _id } = req.query;
 
-  res.render("eachRecipe");
+  try {
+    const recipe = await recipesCollection.findOne({
+      _id: new ObjectId(_id),
+    });
 
+    if (!recipe) {
+      res.status(404);
+      res.render("404", { statusCode: res.statusCode });
+      return;
+    }
+
+    res.render("eachRecipe", { recipe });
+  } catch (error) { return; }
 });
 
 // =====Setting page begins=====
@@ -551,9 +563,7 @@ app.get('/shoppingListPreview', async(req,res) => {
 app.get("*", (req, res) => {
   res.status(404);
   res.render("404", {
-    authenticated: req.session.authenticated,
     statusCode: res.statusCode,
-    error: "Page not found!",
   });
 });
 

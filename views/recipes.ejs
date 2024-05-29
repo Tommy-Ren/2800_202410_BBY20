@@ -25,10 +25,11 @@
                                 <%= recipe.info.level %>&nbsp;&centerdot;&nbsp;<%= recipe.info.yield %>
                     </p>
                 </div>
-                <a href="/eachRecipe" class="btn btn-dark d-grid gap-2 col-8 mx-auto mb-3">GET THE RECIPE</a>
+                <a href="/eachRecipe?_id=<%= recipe._id %>" class="btn btn-dark d-grid gap-2 col-8 mx-auto mb-3">GET THE RECIPE</a>
             </div>
             <% }) %>
         <br><br><br><br>
     </div>
 <%- include("templates/navbar") %>
+<script src="/js/recipes.js"></script>
 <%- include("templates/footer") %>
