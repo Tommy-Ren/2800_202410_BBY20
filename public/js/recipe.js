@@ -43,13 +43,13 @@ selectIngredients.addEventListener('click', function(e) {
 const readCheckboxValue = async () => {
     const ingredients = document.querySelectorAll('.form-check-input.ingredient:checked');
     const selectedIngredients = Array.from(ingredients).map(checkbox => checkbox.value);
-    console.log(selectedIngredients);
+    // console.log(selectedIngredients);
     
-    // // Fetch recipeCollection from MongoDB
+    // Fetch recipeCollection from MongoDB
     // const response = await fetch('/api/recipeCollection');
     // const recipeCollection = await response.json();
     
-    // // Filter recipes based on selected ingredients
+    // Filter recipes based on selected ingredients
     // const filteredRecipes = recipeCollection.filter(recipe => {
     //     return selectedIngredients.every(ingredient => recipe.ingredients.includes(ingredient));
     // });

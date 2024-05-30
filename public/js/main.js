@@ -1,6 +1,8 @@
-function backgroundColor() {
+function background() {
     if (window.location.pathname === '/setting') {
-        document.body.style.background = '#D9D9D9';
+        document.body.style.background = '#F2F2F2';
+    }else if (window.location.pathname === '/notification') {
+        document.body.style.background = '#F2F2F2';
     }
 }
-backgroundColor();
+background();

@@ -46,7 +46,7 @@ app.set("view engine", "ejs");
 
 app.use(express.urlencoded({ extended: false }));
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(__dirname + "/public"));
 
@@ -159,7 +159,7 @@ app.post('/signupSubmit', async (req, res) => {
 
   var hashedPassword = await bcrypt.hash(password, saltRounds);
 
-  await userCollection.insertOne({ name, email, password: hashedPassword, user_type: 'user' });
+  await userCollection.insertOne({ name, email, password: hashedPassword, user_type: 'user', foodExpiry: false, appUpdate: false, getNews: false});
 
   // Create session
   req.session.authenticated = {
@@ -419,9 +419,6 @@ app.get('/home', async (req, res) => {
     res.redirect("/");
     return;
   }
-
-
-
   const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
   if (fridgeArray.length === 0) {
     res.redirect("/connection");
@@ -440,7 +437,7 @@ app.get('/list', sessionValidation, async (req, res) => {
 
   const ingredientArray = await itemColletion.find().toArray();
   let fridgeItems = [];
-  const numItems = Math.floor(Math.random() * 10 + 5);
+  numItems = Math.floor(Math.random() * 10 + 4);
   while (fridgeItems.length < numItems) {
     let item = ingredientArray[Math.floor(Math.random() * ingredientArray.length)];
     if (!fridgeItems.includes(item)) {
@@ -576,10 +573,9 @@ app.get('/setting', async (req, res) => {
 // =====Method to save new fridge into MongoDB=====
 app.post('/saveFridge', async (req, res) => {
   const fridgeName = req.body.fridgeName;
-  const ranFridge = Math.floor(Math.random() * 18 + 1);
+  ranFridge = Math.floor(Math.random() * 16 + 1);
   const fridgeUrl = `${ranFridge}.png`
   const owner = req.session.authenticated.email;
-
   const newFridge = { name: fridgeName, url: fridgeUrl, owner: owner };
   await fridgeCollection.insertOne(newFridge);
   res.redirect("/home");
@@ -621,12 +617,6 @@ app.get('/shopping', async (req, res) => {
   res.render('shopping', { shopping: searchArray, fridge: fridgeArray[0], css: "/css/style.css" });
 });
 
-app.get('/searchItem', async (req, res) => {
-
-  const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
-  res.render('searchItem', { fridge: fridgeArray[0], css: "/css/searchItem.css" });
-})
-
 // =====Method to save new shoppingList into MongoDB===== Phuong CODE
 app.post('/searchItem', async (req, res) => {
   const input = req.body.search;
@@ -646,8 +636,7 @@ app.post('/searchItem', async (req, res) => {
   /** If user input === name or type
    * 
    */
-
-  res.render('searchItem', { search: searchArray, fridge: fridgeArray[0], css: "/css/style.css" });
+  res.render('searchPage', {search: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
 });
 
 // =====Method to save new shoppingList into MongoDB=====
@@ -673,7 +662,6 @@ app.get('/shoppingListPreview', async (req, res) => {
 })
 
 
-
 // =====404 page begins=====
 app.get("*", (req, res) => {
   res.status(404);
@@ -681,8 +669,6 @@ app.get("*", (req, res) => {
     statusCode: res.statusCode,
   });
 });
-
-
 
 app.listen(port, () => {
   console.log("Node application listening on port " + port);

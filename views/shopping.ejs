@@ -21,11 +21,12 @@
             </button>
         </div>
         <div class="search">
-            <input class="pl-4" type="text" placeholder="Search to add a new item" name="search" value="" />
+            <form style="width: 100vw" action="/searchItem" method="post">
+                <input style="width: 100vw;" class="pl-4" type="text" placeholder="Search to add a new item" name="search"> 
+            </form>
         </div>
     </div>
 
-    <div class="searchItem"></div>
     <div class="itemList">
         <ul>
             <% shopping.forEach(item=> { %> <%- include("templates/shoppingItem", {item}) %>
