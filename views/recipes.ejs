@@ -1,26 +1,36 @@
 <%- include("templates/header") %>
+    <div class="d-flex align-items-center">
+        <a class="material-symbols-outlined" onclick="javascript:history.back()">
+            arrow_back
+        </a>&nbsp;
+    </div>
     <h1 class="text-center mt-3 fw-semibold">Recipes</h1>
     <div class="container my-3">
-        We tinkered. We tested. We tested again. We tweaked these recipes until they were absolutely perfect—tried-and-true dishes that are sure to stand the test of time. We feel 100% confident in calling them our "Bests." Try them, and we bet you'll agree.
+        We tinkered. We tested. We tested again. We tweaked these recipes until they were absolutely
+        perfect—tried-and-true dishes that are sure to stand the test of time. We feel 100% confident in calling them
+        our "Bests." Try them, and we bet you'll agree.
     </div>
 
     <div class="container p-0">
-    <% recipes.forEach(function(recipe) { %>
-        <div class="card border border-0">
-            <img src="/image/recipes/<%= recipe.image %>" class="card-img-top rounded-0" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <%= recipe.title %>
-                </h5>
-                <p class="card-text">
-                    <%= recipe.rating.stars %>&nbsp;<i class="bi bi-star-fill" style="color: goldenrod;"></i>
-                        &centerdot;&nbsp;<%= recipe.rating.reviews %>&nbsp;reviews<br>
-                            <%= recipe.info.level %>&nbsp;&centerdot;&nbsp;<%= recipe.info.yield %>
-                </p>
+        <% recipes.forEach(function(recipe) { %>
+            <div class="card border border-0">
+                <img src="/image/recipes/<%= recipe.image %>" class="card-img-top rounded-0" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%= recipe.title %>
+                    </h5>
+                    <p class="card-text">
+                        <%= recipe.rating.stars %>&nbsp;<i class="bi bi-star-fill" style="color: goldenrod;"></i>
+                            &centerdot;&nbsp;<%= recipe.rating.reviews %>&nbsp;reviews<br>
+                                <%= recipe.info.level %>&nbsp;&centerdot;&nbsp;<%= recipe.info.yield %>
+                    </p>
+                </div>
+                <a href="/eachRecipe?_id=<%= recipe._id %>" class="btn btn-dark d-grid gap-2 col-8 mx-auto mb-3">GET THE RECIPE</a>
             </div>
-            <a href="#" class="btn btn-dark d-grid gap-2 col-8 mx-auto mb-3">GET THE RECIPE</a>
-        </div>
-    <% }) %>
-</div>
+            <% }) %>
+    </div>
+
+    <br><br><br><br>
+    
 <%- include("templates/navbar") %>
 <%- include("templates/footer") %>

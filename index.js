@@ -468,7 +468,7 @@ app.get('/list', sessionValidation, async (req, res) => {
 });
 
 // =====recipes page begins=====
-app.get('/recipes', async (req, res) => {
+app.get('/recipes', sessionValidation, async (req, res) => {
   const recipes = await recipesCollection.find().toArray();
   let numRecipes = Math.floor(Math.random() * 11);
 
@@ -484,10 +484,29 @@ app.get('/recipes', async (req, res) => {
 });
 
 // =====eachRecipe page begins=====
-app.get(`/eachRecipe`, async (req, res) => {
+app.get('/eachRecipe', sessionValidation, async (req, res) => {
+  const { _id } = req.query;
+  try {
+    const recipe = await recipesCollection.findOne({
+      _id: new ObjectId(_id),
+    });
 
-  res.render("eachRecipe");
+    if (!recipe) {
+      res.status(404);
+      res.render("404", { statusCode: res.statusCode });
+      return;
+    }
+    res.render("eachRecipe", { recipe });
+  } catch (error) { return; }
+});
 
+// =====Notification page begins=====
+app.get('/notification', async (req, res) => {
+  if (!isValidSession(req)) {
+    res.redirect("/");
+    return;
+  }
+  res.render("notification");
 });
 
 // =====Setting page begins=====
@@ -608,9 +627,7 @@ app.get('/shoppingListPreview', async(req,res) => {
 app.get("*", (req, res) => {
   res.status(404);
   res.render("404", {
-    authenticated: req.session.authenticated,
     statusCode: res.statusCode,
-    error: "Page not found!",
   });
 });
 
