@@ -12,7 +12,7 @@ async function addFoodBankMarkers() {
         foodBanks.forEach(bank => {
             const popup = `<div class="fw-semibold">${bank.name}</div>
                 <div>${bank.location}</div><div class="mb-1">${bank.details}</div>
-                <button type="button" class="btn btn-success">Donate Now</button>
+                <button type="button" class="btn btn-success" onclick="selectFoodBank('${bank._id}', '${bank.name}')">Donate Here</button>
             `;
             L.marker([bank.coordinates.latitude, bank.coordinates.longitude]).addTo(map)
                 .bindPopup(popup);
@@ -20,6 +20,11 @@ async function addFoodBankMarkers() {
     } catch (error) {
         console.error('Error fetching food banks:', error);
     }
+}
+
+function selectFoodBank(foodBankId, foodBankName) {
+    document.getElementById('foodBankId').value = foodBankId;
+    alert(`Selected food bank: ${foodBankName}`);
 }
 
 // Call the async function
