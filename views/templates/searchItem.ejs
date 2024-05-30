@@ -1,23 +1,30 @@
 <li style="margin-bottom: 15px">
+    <div class="d-inline-block mr-2">
+        <img src="/image/ingredient/<%= item.url %>" class="img-fluid" style="width:100px">
+    </div>
 
-            <div class="d-inline-block mr-2">
-                <img src="/image/ingredient/<%= item.url %>" class="img-fluid" style="width:100px">
-            </div>
-
-            <div class="d-inline-block mr-4" style="width: 60px">
-                <%= item.name %>
-            </div>
+    <div class="d-inline-block mr-4" style="width: 60px">
+        <%= item.name %>
+    </div>
            
-            <div class="d-inline-block mr-2">
-                <button id="Notebutton"  class="oval-button">Note</button>
+    <div class="d-inline-block mr-2">
+        <button id="Notebutton" class="oval-button">Note</button>
+        <div class="popup">
+            <div class="popup-content">
+                <button type="button" class="btn btn-dark rounded-circle close">X</button>
+                <textarea name="note" class="popUpInput" type="text" placeholder="Type in your note"></textarea>
+                <button class="btn btn-warning addNote">Add Note</button>
             </div>
+        </div>
+    </div>
 
-            <div class="d-inline-block mr-2">
-                <input style="width:60px; height: 30px" id="amount" type="text" placeholder="amount" name="amount">
-            </div>
+    <div class="d-inline-block mr-2">
+        <input name="amount" data-item="<%= item.name %>" style="width:60px; height: 30px" id="amount" type="text" placeholder="amount">
+    </div>
 
-            <div class="d-inline-block">
-                    <button type="button" class="btn btn-info rounded-circle btn-sm">+</button>
-            </div>
+    <div class="d-inline-block">
+        <input type="hidden" name="url" data-item="<%= item.name %>" value="<%= item.url %>">
+        <button data-item="<%= item.name %>" class="btn btn-info rounded-circle btn-sm addToDB">+</button>
+    </div>
 </li>
 
