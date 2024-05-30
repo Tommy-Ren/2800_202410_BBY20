@@ -64,6 +64,7 @@ const fridgeCollection = db.collection('fridge');
 const shopping = db.collection('shopping');
 const listCollection = db.collection('list');
 const recipesCollection = db.collection('recipes');
+const foodBankCollection = db.collection('food_banks');
 
 app.use(
   session({
@@ -466,6 +467,15 @@ app.get('/eachRecipe', sessionValidation, async (req, res) => {
 
     res.render("eachRecipe", { recipe });
   } catch (error) { return; }
+});
+
+app.get('/foodBanks', sessionValidation, async (req, res) => {
+  const foodBanks = await foodBankCollection.find().toArray();
+  res.json(foodBanks);
+})
+
+app.get('/donation', sessionValidation, async (req, res) => {
+  res.render("donation");
 });
 
 // =====Setting page begins=====

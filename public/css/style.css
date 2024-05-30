@@ -84,9 +84,7 @@ li {
 }
 
 .navbar {
-    justify-content: space-between;
-    background-color: rgba(44, 102, 228, 0.6);
-    border-radius: 1.75rem 1.75rem 0 0;
+    background-color: rgba(44, 102, 228);
     box-shadow: 0 -1px 12px hsla(174, 63%, 15%, 0.15);
 }
 

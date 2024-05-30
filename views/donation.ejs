@@ -1,0 +1,60 @@
+<%- include("templates/header") %>
+
+<form>
+  <div class="mb-3">
+    <label for="fullName" class="form-label">Name</label>
+    <input type="text" class="form-control" id="fullName" placeholder="Full Name">
+  </div>
+  <div class="mb-3">
+    <label for="organizationName" class="form-label">Organization (if applicable)</label>
+    <input type="text" class="form-control" id="organizationName" placeholder="Organization Name">
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Email Address</label>
+    <input type="email" class="form-control" id="email" placeholder="Email Address">
+  </div>
+  <div class="mb-3">
+    <label for="phoneNumber" class="form-label">Phone Number</label>
+    <input type="tel" class="form-control" id="phoneNumber" placeholder="Phone Number">
+  </div>
+  <div class="mb-3">
+    <label for="address" class="form-label">Address</label>
+    <input type="text" class="form-control" id="address" placeholder="Address">
+  </div>
+  <div class="mb-3">
+    <label for="foodType" class="form-label">Type of Food</label>
+    <input type="text" class="form-control" id="foodType" placeholder="Type of Food">
+  </div>
+  <div class="mb-3">
+    <label for="quantity" class="form-label">Quantity</label>
+    <input type="text" class="form-control" id="quantity" placeholder="Quantity">
+  </div>
+  <div class="mb-3">
+    <label for="expirationDate" class="form-label">Expiration Date (if applicable)</label>
+    <input type="date" class="form-control" id="expirationDate">
+  </div>
+  <div class="mb-3">
+    <label for="condition" class="form-label">Condition</label>
+    <input type="text" class="form-control" id="condition" placeholder="Condition">
+  </div>
+  <div class="mb-3">
+    <label for="deliveryDate" class="form-label">Preferred Delivery/Pickup Date</label>
+    <input type="date" class="form-control" id="deliveryDate">
+  </div>
+  <div class="mb-3">
+    <label for="deliveryTime" class="form-label">Preferred Delivery/Pickup Time</label>
+    <input type="time" class="form-control" id="deliveryTime">
+  </div>
+  <div class="mb-3">
+    <label for="additionalInfo" class="form-label">Additional Information/Comments</label>
+    <textarea class="form-control" id="additionalInfo" rows="3"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<div id="map" style="height: 35vh;"></div>
+
+<%- include("templates/navbar") %>
+
+<script src="/js/donation.js"></script>
+<%- include("templates/footer") %>
