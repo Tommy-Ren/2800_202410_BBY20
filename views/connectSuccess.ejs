@@ -5,10 +5,10 @@
             <img src="/image/connectionSuccess.png" class="connectSuccessImage">
         </div>
         <div class="successText2">Now, it's time to give your new fridge a name!</div>
-        <form class="center">
+        <form class="center" action="/saveFridge" method="post">
             <input class="fridgeNameInput" name="fridgeName" type="text" placeholder="Name">
             <br>
-            <button class="btn btn-info btn-lg mt-4" id="save" onclick="createFridge(req, res)">Save</button>
+            <button class="btn btn-info btn-lg mt-4" id="save">Save</button>
         </form>
     </div>
 <script src="/js/createFridge.js"></script>

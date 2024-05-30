@@ -16,7 +16,8 @@
                             </div>
                             <div class="col-auto">
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="foodExpiry"/>
+                                    <input type="checkbox" class="custom-control-input" id="foodExpiry"
+                                        onchange="handleNotificationChange(this)" />
                                     <label class="custom-control-label" for="foodExpiry"></label>
                                 </div>
                             </div>
@@ -59,5 +60,31 @@
             </div>
         </div>
     </div>
+
+    <script>
+        if (Notification.permission === "granted") {
+            document.getElementById("foodExpiry").checked = true;
+        }
+        function handleNotificationChange(element) {
+            if (element.checked) {
+                Notification.requestPermission().then(function (permission) {
+                    if (permission === "granted") {
+                        var notification = new Notification("Food Expiry Notification", {
+                            body: "The item Crispy Garlic Soy Tofu in your fridge will be expiry in 2 days!",
+                            icon: "image/logo.png"
+                        });
+                        alert("You have enabled notification " + Notification.permission);
+                        element.checked = true;
+                    } else {
+                        element.checked = false;
+                        alert("You have disabled notification " + Notification.permission);
+                    }
+                });
+            }else{
+                Notification.permission = "denied";
+                alert("You have disabled notification " + Notification.permission);
+            }
+        }
+    </script>
 <%- include("templates/navbar") %>
 <%- include("templates/footer") %>

@@ -159,7 +159,7 @@ app.post('/signupSubmit', async (req, res) => {
 
   var hashedPassword = await bcrypt.hash(password, saltRounds);
 
-  await userCollection.insertOne({ name, email, password: hashedPassword, user_type: 'user', foodExpiry: false, appUpdate: false, getNews: false});
+  await userCollection.insertOne({ name, email, password: hashedPassword, user_type: 'user', foodExpiry: false, appUpdate: false, getNews: false });
 
   // Create session
   req.session.authenticated = {
