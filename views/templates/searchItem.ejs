@@ -1,28 +1,31 @@
-<li>
+<li style="margin-bottom: 15px">
 
-            <div class="col-sm">
-                <img src="/image/ingredient/<%= item.url %>" class="img-fluid w-50">
+            <div class="d-inline-block mr-2">
+                <img src="/image/ingredient/<%= item.url %>" class="img-fluid" style="width:110px">
             </div>
 
             
-            <div class="col-sm">
+            <div class="d-inline-block mr-4" style="width: 65px">
                 <%= item.name %>
             </div>
+                
+            
 
            
-            <div class="col-sm">
+            <div class="d-inline-block mr-2">
                 <button class="oval-button">Note</button>
             </div>
 
            
-            <div class="col-sm">
-                <input id="amount" type="number" placeholder="amount" name="amount">
+            <div class="d-inline-block mr-2">
+                
+                <input style="width:60px; height: 30px" id="amount" type="text" placeholder="amount" name="amount">
             </div>
 
             
-            <div class="col-sm">
+            <div class="d-inline-block">
                 <form action="/addSearch" method="post">
-                    <button type="button" class="btn btn-info p-5 rounded-circle btn-sm">+</button>
+                    <button type="button" class="btn btn-info rounded-circle btn-sm">+</button>
                 </form>
             </div>
           
