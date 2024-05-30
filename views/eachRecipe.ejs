@@ -1,45 +1,41 @@
 <%- include("templates/header") %>
+    <div class="d-flex align-items-center">
+        <a class="material-symbols-outlined" onclick="javascript:history.back()">
+            arrow_back
+        </a>&nbsp;
+    </div>
     <div class="container">
-        <div class="d-flex align-items-center">
-            <a class="material-symbols-outlined" onclick="javascript:history.back()">
-                arrow_back
-            </a>&nbsp;
-        </div>
         <div class="title text-center">
-            <img src="/image/recipes/eggs-benedict.jpeg" class="img-fluid mb-3">
-            <h1 class="name">The Best Eggs Benedict</h1>
+            <img src="/image/recipes/<%= recipe.image %>" class="img-fluid mb-3">
+            <h1 class="name">
+                <%= recipe.title %>
+            </h1>
             <div class="rate d-inline-flex mb-3">
-                <div class="stars">
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-half"></i>
-                </div>
-                <div class="reviews">&nbsp;16 reviews</div>
+                <%= recipe.rating.stars %>&nbsp;<i class="bi bi-star-fill" style="color: goldenrod;"></i>
+                    &nbsp;&centerdot;&nbsp;<%= recipe.rating.reviews %>&nbsp;reviews<br>
             </div>
         </div>
 
         <hr>
 
         <div class="info d-flex mb-3 justify-content-center">
-            <div class="level px-2">Level: Intermediate</div>
-            <div class="time border-start border-end px-4 mx-2">
+            <div class="attributes text-end border-end pe-3">
+                <div class="level">Level: <%= recipe.info.level %>
+                </div>
+                <div class="yield">Yield: <%= recipe.info.yield %>
+                </div>
+            </div>
+
+            <div class="time ps-3">
                 <div class="total">Total: 25 mins</div>
                 <div class="active">Active: 20 mins</div>
-            </div>
-            <div class="serving px-2">
-                <div class="yield">Yield: 4 servings</div>
-                <div class="nutrition">Nutrition Info</div>
             </div>
         </div>
 
         <hr>
 
         <div class="note mb-3">
-            We engineered this classic brunch dish to guarantee your success. By getting the muffins and bacon ready in
-            advance and keeping them warm in the oven, you can focus on poaching a perfect egg. A blender makes an easy,
-            foolproof hollandaise sauce. We added plenty of lemon to make it bright and tangy.
+            <%= recipe.note %>
         </div>
 
         <hr>
@@ -56,117 +52,56 @@
                     Deselected all
                 </label>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="2" id="" checked>
-                <label class="form-check-label" for="flexRadioDefault1">
-                    1 tablespoon white distilled vinegar
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="" id="" checked>
-                <label class="form-check-label" for="flexRadioDefault1">
-                    4 English muffins, split
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="" id="">
-                <label class="form-check-label" for="flexRadioDefault1">
-                    2 sticks (16 tablespoons) unsalted butter, plus more for spreading
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="" id="" checked>
-                <label class="form-check-label" for="flexRadioDefault1">
-                    8 slices Canadian bacon
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="" id="">
-                <label class="form-check-label" for="flexRadioDefault1">
-                    3 tablespoons freshly squeezed lemon juice
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="" id="" checked>
-                <label class="form-check-label" for="flexRadioDefault1">
-                    Kosher salt
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="" id="" checked>
-                <label class="form-check-label" for="flexRadioDefault1">
-                    1/4 teaspoon cayenne, plus more for serving
-                </label>
-            </div>
 
-            <div class="add my-2 d-grid gap-2 col-6 mx-auto">
-                <button class="btn btn-light border rounded-pill"><i class="bi bi-plus-circle">&nbsp</i>Add to Shopping
-                    List</button>
-            </div>
-            <div class="view my-2 d-grid gap-2 col-6 mx-auto">
-                <button class="btn btn-light border rounded-pill"><i class="bi bi-cart"></i>&nbspView Shopping
-                    List</button>
-            </div>
-            <div class="substitute my-2 d-grid gap-2 col-6 mx-auto">
-                <button class="btn btn-light border rounded-pill"><i class="bi bi-egg"></i>&nbspSubstitute
-                    Ingredients</button>
-            </div>
+            <% recipe.ingredients.forEach(function(ingredient) { %>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="2" id="" checked>
+                    <label class="form-check-label" for="flexRadioDefault1">
+                        <%= ingredient %>
+                    </label>
+                </div>
+                <% }) %>
+
+                    <div class="add my-2 d-grid gap-2 col-6 mx-auto">
+                        <button class="btn btn-light border rounded-pill"><i class="bi bi-plus-circle">&nbsp</i>Add to
+                            Shopping
+                            List</button>
+                    </div>
+                    <div class="view my-2 d-grid gap-2 col-6 mx-auto">
+                        <button class="btn btn-light border rounded-pill"><i class="bi bi-cart"></i>&nbspView Shopping
+                            List</button>
+                    </div>
+                    <div class="substitute my-2 d-grid gap-2 col-6 mx-auto">
+                        <button class="btn btn-light border rounded-pill"><i class="bi bi-egg"></i>&nbspSubstitute
+                            Ingredients</button>
+                    </div>
         </div>
 
         <hr>
 
         <div class="directions mb-3">
             <h2>Directions</h2>
-            <div class="step d-inline-flex mb-2">
-                <div class="number h1 fw-bold me-2">1</div>
-                <div class="text">Preheat the oven to 200 degrees F.</div>
-            </div>
-            <div class="step d-inline-flex mb-2">
-                <div class="number h1 fw-bold me-2">2</div>
-                <div class="text">Fill a large saucepan with 2 quarts water. Add the vinegar and bring to a simmer over
-                    medium-high heat.</div>
-            </div>
-            <div class="step d-inline-flex mb-2">
-                <div class="number h1 fw-bold me-2">3</div>
-                <div class="text">Meanwhile, toast the English muffins until golden brown. Spread with butter and place
-                    on one side of a baking sheet. Keep warm in the oven.</div>
-            </div>
-            <div class="step d-inline-flex mb-2">
-                <div class="number h1 fw-bold me-2">4</div>
-                <div class="text">Melt 1 tablespoon of the butter in a large skillet over medium heat. Add the Canadian
-                    bacon and cook until heated through, about 30 seconds per side. Transfer the bacon to the other side
-                    of the baking sheet to keep warm. </div>
-            </div>
-            <div class="step d-inline-flex mb-2">
-                <div class="number h1 fw-bold me-2">5</div>
-                <div class="text">Melt the remaining butter in a medium saucepan over medium heat. Add the yolks, lemon
-                    juice, 1 1/2 teaspoons salt and the cayenne to a blender. Blend for 1 minute. With the blender
-                    running, pour the melted butter very slowly through the open hole of the blender lid until smooth,
-                    thick and emulsified. Transfer the sauce back to the saucepan and place in the oven to keep warm.
+            <% recipe.directions.forEach(function(direction, index) { %>
+                <div class="step d-inline-flex mb-2">
+                    <div class="number h1 fw-bold me-2">
+                        <%= index %>
+                    </div>
+                    <div class="text">
+                        <%= direction %>
+                    </div>
                 </div>
-            </div>
-            <div class="step d-inline-flex mb-2">
-                <div class="number h1 fw-bold me-2">6</div>
-                <div class="text">Crack the whole eggs into small cups or glasses. If your simmering water has reduced
-                    too much, add a bit more water and bring back to a steady simmer. When the water is at a steady
-                    simmer, slip the eggs into the water in one quick motion, arranging them clockwise in the pan so you
-                    know which will be ready first.. Poach the eggs until the whites are firm but the yolks are still
-                    runny, 4 to 5 minutes. Remove the eggs with a slotted spoon and drain on a paper towel.</div>
-            </div>
-            <div class="step d-inline-flex mb-2">
-                <div class="number h1 fw-bold me-2">7</div>
-                <div class="text">Top each muffin half with a slice of Canadian bacon and a poached egg. Pour
-                    hollandaise sauce over each muffin. (If the sauce has thickened too much, whisk it with a tablespoon
-                    of water.) Sprinkle each serving with a little cayenne and serve immediately.</div>
-            </div>
+                <% }) %>
 
-            <hr>
+                    <hr>
 
-            <div class="note mb-10">
-                <div class="h2 fw-bold">Cook's Note</div>
-                You can substitute or add ingredients to customize your eggs benedict. Try layering sliced tomato,
-                avocado wedges or sauteed spinach underneath the egg.
-            </div>
+                    <div class="note mb-10">
+                        <div class="h2 fw-bold">Cook's Note</div>
+                        <%= recipe.cooksNote %>
+                    </div>
         </div>
     </div>
-<%- include("templates/footer") %>
+
+    <br><br><br><br>
+
+    <%- include("templates/navbar") %>
+    <%- include("templates/footer") %>
