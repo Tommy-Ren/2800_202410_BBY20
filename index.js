@@ -612,31 +612,75 @@ app.get('/shopping', async (req, res) => {
     return;
   }
 
-  const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
-  const searchArray = await searchCollection.find({ owner: req.session.authenticated.email }).toArray();
-  res.render('shopping', { shopping: searchArray, fridge: fridgeArray[0], css: "/css/style.css" });
+    const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
+    const searchArray = await searchCollection.find({owner: req.session.authenticated.email}).toArray();
+    res.render('shopping', {shopping: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
+});
+
+// =====Method to save new shoppingList into MongoDB=====
+app.get('/searchItem', async (req, res) => {
+    const input = req.query.search;
+
+    const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
+    let searchArray = await shoppingListCollection.find({name: input}).toArray();
+
+    // Check with type if can't not find with name
+    if(searchArray.length === 0){
+        searchArray = await shoppingListCollection.find({type: input}).toArray();
+    }
+
+    res.render('searchPage', {searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
+});
+
+//=====Method to add note in searchPage into MongoDB===== Phuong CODE
+app.post('/addSearch', async (req,res) => {
+    const itemName = req.body.itemName;
+    const note = req.body.note;
+    const amount = req.body.amount;
+    const owner = req.session.authenticated.email;
+    const input = req.body.input;
+    const url = req.body.url;
+
+    const listArray = await listCollection.find({owner: req.session.authenticated.email}).toArray();
+    const listID = listArray.length + 1;
+
+    const newSearch = {key:owner + "-" + listID, owner: owner, listID: listID, itemName: itemName, url: url, itemAmount: amount, note: note};
+    await searchCollection.insertOne(newSearch);
+    res.redirect(`/searchItem?search=${input}`);
+});
+
+// =====Method to save new shoppingList into MongoDB=====
+app.post('/addList', async (req, res) => {
+    const listArray = await listCollection.find({owner: req.session.authenticated.email}).toArray();
+    const listID = listArray.length + 1;
+    const date = new Date().toLocaleDateString();
+    const owner = req.session.authenticated.email;
+
+    const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
+    const searchArray = await searchCollection.find({ owner: req.session.authenticated.email }).toArray();
+    res.render('shopping', { shopping: searchArray, fridge: fridgeArray[0], css: "/css/style.css" });
 });
 
 // =====Method to save new shoppingList into MongoDB===== Phuong CODE
 app.post('/searchItem', async (req, res) => {
-  const input = req.body.search;
+    const input = req.body.search;
 
-  let searchArray = [];
-  const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
+    let searchArray = [];
+    const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
 
-  searchArray = await shoppingListCollection.find({ name: input }).toArray();
-  console.log("search by name: ", searchArray);
-  //check if there is input in db that is equals to name
-  if (searchArray.length === 0) {
-    searchArray = await shoppingListCollection.find({ type: input }).toArray();
+    searchArray = await shoppingListCollection.find({ name: input }).toArray();
+    console.log("search by name: ", searchArray);
     //check if there is input in db that is equals to name
-    console.log("search by type ", searchArray);
-  }
-  console.log(searchArray.length);
-  /** If user input === name or type
-   * 
-   */
-  res.render('searchPage', { search: searchArray, fridge: fridgeArray[0], css: "/css/style.css" });
+    if (searchArray.length === 0) {
+      searchArray = await shoppingListCollection.find({ type: input }).toArray();
+      //check if there is input in db that is equals to name
+      console.log("search by type ", searchArray);
+    }
+    console.log(searchArray.length);
+    /** If user input === name or type
+     * 
+     */
+    res.render('searchPage', {search: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
 });
 
 // =====Method to save new shoppingList into MongoDB=====
@@ -652,15 +696,14 @@ app.post('/addList', async (req, res) => {
 });
 
 // =====shoppingListPreview begins=====
-app.get('/shoppingListPreview', async (req, res) => {
-  if (!isValidSession(req)) {
-    res.redirect("/");
-    return;
-  }
-  const listArray = await listCollection.find({ owner: req.session.authenticated.email }).toArray();
-  res.render("shoppingListPreview", { listArray, css: "/css/shoppingListPreview.css" });
-})
-
+app.get('/shoppingListPreview', async(req,res) => {
+    if (!isValidSession(req)) {
+      res.redirect("/");
+      return;
+    }
+    const listArray = await listCollection.find({owner: req.session.authenticated.email}).toArray();
+    res.render("shoppingListPreview", {listArray, css: "/css/shoppingListPreview.css"});
+});
 
 // =====404 page begins=====
 app.get("*", (req, res) => {

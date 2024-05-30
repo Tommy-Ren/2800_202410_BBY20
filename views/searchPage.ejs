@@ -15,40 +15,27 @@
             </button>
         </div>
         <div class="search">
-            <form style="width: 100vw" action="/searchItem" method="post">
+            <form style="width: 100vw" action="/searchItem" method="get">
                 <input style="width: 100vw;" class="pl-4" type="text" placeholder="Search to add a new item" name="search"> 
             </form>
         </div>
     </div>
     <div class="searchItem">
         <ul>
-            <% search.forEach(item => { %>
+            <% searchArray.forEach(item => { %>
                 <%- include("templates/searchItem", {item}) %>
             <% }) %>
         </ul>
     </div>
-
-
-    <div class="popup">
-        <div class="popup-content">
-            <button type="button" class="btn btn-dark rounded-circle close">X</button>
-            <textarea name="note" class="popUpInput" type="text" placeholder="Type in your note"></textarea>
-            <button class="btn btn-warning">Add</button>
-        </div>
-        
+    <div class="addButton">
+        <% if (searchArray.length> 0) { %>
+            <form action="/shopping" method="get">
+                <button class="btn btn-secondary" id="add">Done</button>
+            </form>
+        <% } else { %>
+            <p></p>
+        <% } %>
     </div>
-
-<script>
-    document.querySelectorAll(".oval-button").forEach(function(button) {
-        button.addEventListener("click", function(){
-            document.querySelector(".popup").style.display = "flex";
-        })
-    });
-
-    console.log("button click");
-    document.querySelector(".close").addEventListener("click", function(){
-        document.querySelector(".popup").style.display = "none";
-    })
-</script>
-
+    <script src="/js/search.js"></script>  
+<%- include("templates/navbar") %> 
 <%- include("templates/footer") %>
