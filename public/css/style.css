@@ -173,6 +173,49 @@ li {
 
 
 /************************ Shopping Page  ***************************/
+.popup {
+    display: none;
+    background-color: #FFFB9C;
+    position: fixed;
+    top: 50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    border-radius: 15px;
+    width: 85vw;
+    text-align: center;
+    
+}
+  .popup-content{
+    height: 250px;
+    width: 100%;
+    background-color: #FFFB9C;
+    border-radius: 25px;
+    position: relative;
+  }
+  
+  .popUpInput{
+    margin: 20px auto;
+    display: block;
+    width: 80%;
+    height: 65%;
+    padding:15px;
+    border: 1px solid gray;
+  
+  }
+  
+  .close {
+    position: absolute;
+    top: 1px;
+    right: 3px;
+    background: white;
+    color: dark;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  
 .shopping {
     width: 100vw;
     height: auto;
@@ -229,7 +272,7 @@ li {
 
 .searchItem {
     width: 100vw;
-    height: 700px;
+    /* height: 700px; */
     margin-top: 20px;
     margin-left: 10px;
     margin-right: 10px;
@@ -268,6 +311,12 @@ li {
     font-size: 25px;
     color: black;
 }
+
+.oval-button {
+    border-radius: 50%; /* sets the border radius to half of its width to create an oval shape */
+    background-color: #FFFB9C;
+  }
+
 
 /************************ Setting Page  ***************************/
 .user-info {

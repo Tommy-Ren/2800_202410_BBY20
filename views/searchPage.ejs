@@ -27,15 +27,28 @@
             <% }) %>
         </ul>
     </div>
-    <div class="addButton">
-        <%if(search.length >0) { %>
-            <form>
-                <button class="btn btn-secondary" id="done">Done</button>
-            </form>
-        <%} else{ %>
-            <div></div>
-        <% }%>
 
+
+    <div class="popup">
+        <div class="popup-content">
+            <button type="button" class="btn btn-dark rounded-circle close">X</button>
+            <textarea name="note" class="popUpInput" type="text" placeholder="Type in your note"></textarea>
+            <button class="btn btn-warning">Add</button>
+        </div>
+        
     </div>
-<%- include("templates/navbar") %>
+
+<script>
+    document.querySelectorAll(".oval-button").forEach(function(button) {
+        button.addEventListener("click", function(){
+            document.querySelector(".popup").style.display = "flex";
+        })
+    });
+
+    console.log("button click");
+    document.querySelector(".close").addEventListener("click", function(){
+        document.querySelector(".popup").style.display = "none";
+    })
+</script>
+
 <%- include("templates/footer") %>
