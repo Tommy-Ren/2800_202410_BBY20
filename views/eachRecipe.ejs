@@ -1,103 +1,121 @@
 <%- include("templates/header") %>
-    <div class="d-flex align-items-center">
-        <a class="material-symbols-outlined" onclick="javascript:history.back()">
-            arrow_back
-        </a>&nbsp;
+<div class="d-flex align-items-center">
+    <a class="material-symbols-outlined" onclick="javascript:history.back()">
+        arrow_back
+    </a>&nbsp;
+</div>
+
+<div class="container">
+    <div class="title text-center">
+        <img src="/image/recipes/<%= recipe.image %>" class="img-fluid mb-3">
+        <h1 class="name">
+            <%= recipe.title %>
+        </h1>
+        <div class="rate d-inline-flex mb-3">
+            <%= recipe.rating.stars %>&nbsp;<i class="bi bi-star-fill" style="color: goldenrod;"></i>
+                &nbsp;&centerdot;&nbsp;<%= recipe.rating.reviews %>&nbsp;reviews<br>
+        </div>
     </div>
-    <div class="container">
-        <div class="title text-center">
-            <img src="/image/recipes/<%= recipe.image %>" class="img-fluid mb-3">
-            <h1 class="name">
-                <%= recipe.title %>
-            </h1>
-            <div class="rate d-inline-flex mb-3">
-                <%= recipe.rating.stars %>&nbsp;<i class="bi bi-star-fill" style="color: goldenrod;"></i>
-                    &nbsp;&centerdot;&nbsp;<%= recipe.rating.reviews %>&nbsp;reviews<br>
+
+    <hr style="height:1px;border:none;color:#333;background-color:#333;">
+
+    <div class="info d-flex mb-3 justify-content-center">
+        <div class="attributes text-end border-end pe-3">
+            <div class="level">Level: <%= recipe.info.level %>
+            </div>
+            <div class="yield">Yield: <%= recipe.info.yield %>
             </div>
         </div>
 
-        <hr>
+        <div class="time ps-3">
+            <div class="total">Total: <%= recipe.info.time.total %> mins</div>
+            <div class="active">Active: <%= recipe.info.time.active %> mins</div>
+        </div>
+    </div>
 
-        <div class="info d-flex mb-3 justify-content-center">
-            <div class="attributes text-end border-end pe-3">
-                <div class="level">Level: <%= recipe.info.level %>
-                </div>
-                <div class="yield">Yield: <%= recipe.info.yield %>
-                </div>
-            </div>
+    <hr style="height:1px;border:none;color:#333;background-color:#333;">
 
-            <div class="time ps-3">
-                <div class="total">Total: 25 mins</div>
-                <div class="active">Active: 20 mins</div>
-            </div>
+    <div class="note mb-3">
+        <%= recipe.note %>
+    </div>
+
+    <div class="save text-center mb-3">
+        <button class="btn btn-danger rounded-pill px-4"><i class="bi bi-bookmark"></i> Save Recipe</button>
+    </div>
+
+    <hr style="height:1px;border:none;color:#333;background-color:#333;">
+
+    <div class="d-grid gap-2">
+        <button class="btn text-start border border-0 h2" type="button" data-bs-toggle="collapse"
+            data-bs-target="#ingredients" aria-expanded="false" aria-controls="ingredients" style="font-size: 1.5rem;">
+            Ingredients
+        </button>
+    </div>
+
+    <div class="collapse" id="ingredients">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="deselect-all" checked>
+            <label class="form-check-label" for="deselect-all">
+                Deselect all
+            </label>
         </div>
 
-        <hr>
-
-        <div class="note mb-3">
-            <%= recipe.note %>
-        </div>
-
-        <hr>
-
-        <div class="save text-center mb-3">
-            <button class="btn btn-danger rounded-pill px-4"><i class="bi bi-bookmark"></i> Save Recipe</button>
-        </div>
-
-        <div class="ingredients mb-3">
-            <h2>Ingredients</h2>
+        <% recipe.ingredients.forEach(function(ingredient, index) { %>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="" id="" checked>
-                <label class="form-check-label" for="flexRadioDefault1">
-                    Deselected all
+                <input class="form-check-input" type="checkbox" id="ingredient-<%= index %>" checked>
+                <label class="form-check-label" for="ingredient-<%= index %>">
+                    <%= ingredient %>
                 </label>
             </div>
+        <% }) %>
 
-            <% recipe.ingredients.forEach(function(ingredient) { %>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="2" id="" checked>
-                    <label class="form-check-label" for="flexRadioDefault1">
-                        <%= ingredient %>
-                    </label>
-                </div>
-                <% }) %>
-
-                    <div class="add my-2 d-grid gap-2 col-6 mx-auto">
-                        <button class="btn btn-light border rounded-pill"><i class="bi bi-plus-circle">&nbsp</i>Add to
-                            Shopping
-                            List</button>
-                    </div>
-                    <div class="view my-2 d-grid gap-2 col-6 mx-auto">
-                        <button class="btn btn-light border rounded-pill"><i class="bi bi-cart"></i>&nbspView Shopping
-                            List</button>
-                    </div>
+        <div class="add my-2 d-grid gap-2 col-8 mx-auto">
+            <button class="btn btn-light border rounded-pill"><i class="bi bi-plus-circle">&nbsp</i>Add to
+                Shopping List</button>
+        </div>
+        <div class="view my-2 d-grid gap-2 col-8 mx-auto">
+            <button class="btn btn-light border rounded-pill"><i class="bi bi-cart"></i>&nbspView Shopping List</button>
         </div>
 
-        <hr>
-
-        <div class="directions mb-3">
-            <h2>Instruction</h2>
-            <% recipe.directions.forEach(function(direction, index) { %>
-                <div class="step d-inline-flex mb-2">
-                    <div class="number h1 fw-bold me-2">
-                        <%= index %>
-                    </div>
-                    <div class="text">
-                        <%= direction %>
-                    </div>
-                </div>
-                <% }) %>
-
-                    <hr>
-
-                    <div class="note mb-10">
-                        <div class="h2 fw-bold">Cook's Note</div>
-                        <%= recipe.cooksNote %>
-                    </div>
-        </div>
     </div>
 
-    <br><br><br><br>
+    <hr style="height:1px;border:none;color:#333;background-color:#333;">
 
-    <%- include("templates/navbar") %>
-    <%- include("templates/footer") %>
+    <div class="d-grid gap-2">
+        <button class="btn text-start border border-0 h2" type="button" data-bs-toggle="collapse"
+            data-bs-target="#directions" aria-expanded="false" aria-controls="directions" style="font-size: 1.5rem;">
+            Directions
+        </button>
+    </div>
+
+    <div class="collapse" id="directions">
+        <% recipe.directions.forEach(function(direction, index) { %>
+            <div class="step d-inline-flex mb-2">
+                <div class="number h1 fw-bold me-2">
+                    <%= index + 1 %>
+                </div>
+                <div class="text">
+                    <%= direction %>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+
+    <hr style="height:1px;border:none;color:#333;background-color:#333;">
+
+    <div class="d-grid gap-2">
+        <button class="btn text-start border border-0 h2" type="button" data-bs-toggle="collapse"
+            data-bs-target="#cooksNote" aria-expanded="false" aria-controls="cooksNote" style="font-size: 1.5rem;">
+            Cook's Note
+        </button>
+    </div>
+
+    <div class="collapse" id="cooksNote">
+        <%= recipe.cooksNote %>
+    </div>
+</div>
+
+<br><br><br><br>
+
+<%- include("templates/navbar") %>
+<%- include("templates/footer") %>

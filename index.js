@@ -66,7 +66,10 @@ const fridgeCollection = db.collection('fridge');
 const listCollection = db.collection('list');
 const shoppingListCollection = db.collection('shoppingList');
 const recipesCollection = db.collection('recipes');
+const foodBankCollection = db.collection('food_banks');
 const searchCollection = db.collection('search');
+const donationCollection = db.collection('donation');
+
 app.use(
   session({
     secret: node_session_secret,
@@ -129,7 +132,7 @@ app.get('/signup', (req, res) => {
     res.redirect("/home");
     return;
   }
-  
+
   res.render("signup", { css: "/css/login.css" });
 })
 
@@ -145,13 +148,13 @@ app.post('/signupSubmit', async (req, res) => {
 
   const validationResult = schema.validate({ name, email, password });
   if (validationResult.error != null) {
-      if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
-          // Handle AJAX request
-          return res.json({ success: false });
-      } else {
-          // Handle regular form submission
-          return res.render("signupSubmit", { error: validationResult.error.details[0].message });
-      }
+    if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
+      // Handle AJAX request
+      return res.json({ success: false });
+    } else {
+      // Handle regular form submission
+      return res.render("signupSubmit", { error: validationResult.error.details[0].message });
+    }
   }
 
   var hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -240,7 +243,7 @@ app.post("/loggingin", async (req, res) => {
 // =====connection page begins=====
 app.get('/connection', (req, res) => {
   res.render('connection', { css: "/css/connection.css" });
-  
+
 })
 
 
@@ -445,11 +448,11 @@ app.get('/list', sessionValidation, async (req, res) => {
   // const ingredientArray2 = await itemColletion2.find().toArray();
   // let fridgeItems2 = [];
   // const numItems2 = Math.floor(Math.random() * 20 + 10);
-  
+
   // while (fridgeItems2.length < numItems2) {
   //   let item2 = ingredientArray2[Math.floor(Math.random() * ingredientArray2.length)];
   //   let amount = Math.floor(Math.random() * 100 + 1);
-    
+
   //   if (!fridgeItems2.includes(item2)) {
   //     try {
   //       const response = await fetch(`https://api.spoonacular.com/food/ingredients/${item2._id}/information?apiKey=${api_key}&amount=${amount}`);
@@ -495,6 +498,54 @@ app.get('/eachRecipe', sessionValidation, async (req, res) => {
     }
     res.render("eachRecipe", { recipe });
   } catch (error) { return; }
+});
+
+app.get('/foodBanks', sessionValidation, async (req, res) => {
+  const foodBanks = await foodBankCollection.find().toArray();
+  res.json(foodBanks);
+})
+
+app.get('/donation', sessionValidation, async (req, res) => {
+  res.render("donation", { authenticated: req.session.authenticated });
+});
+
+app.post('/donation', sessionValidation, async (req, res) => {
+  const { fullName, email, 'foodType[]': foodTypes, 'quantity[]': quantities, 'expirationDate[]': expirationDates, deliveryDate, deliveryTime, additionalInfo, foodBankId } = req.body;
+
+
+  // Combine foodTypes and quantities into foodItems array
+  const foodItems = [];
+  if (Array.isArray(foodTypes) && Array.isArray(quantities)) {
+    for (let i = 0; i < foodTypes.length; i++) {
+      foodItems.push({
+        foodType: foodTypes[i],
+        quantity: quantities[i],
+        expirationDate: expirationDates[i] || null  // Handle optional expiration date
+      });
+    }
+  } else if (foodTypes && quantities) {
+    // Handle case where there is only one food item (not an array)
+    foodItems.push({
+      foodType: foodTypes,
+      quantity: quantities,
+      expirationDate: expirationDates || null  // Handle optional expiration date
+    });
+  }
+
+  const newDonation = {
+    fullName,
+    email,
+    foodItems,
+    deliveryDate,
+    deliveryTime,
+    additionalInfo,
+    foodBankId  // Include the selected food bank ID
+  };
+
+  // Save the new donation to the database or perform other processing
+  await donationCollection.insertOne(newDonation);
+
+  res.redirect('/home');  // Redirect to a thank you page or somewhere else
 });
 
 // =====Notification page begins=====
@@ -556,64 +607,58 @@ app.post('/deleteFridge/:name', async (req, res) => {
 
 // =====Shopping list page begins=====
 app.get('/shopping', async (req, res) => {
-    if (!isValidSession(req)) {
-      res.redirect("/");
-      return;
-    }
+  if (!isValidSession(req)) {
+    res.redirect("/");
+    return;
+  }
 
-    const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
-    const searchArray = await searchCollection.find({owner: req.session.authenticated.email}).toArray();
-    res.render('shopping', {shopping: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
+  const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
+  const searchArray = await searchCollection.find({ owner: req.session.authenticated.email }).toArray();
+  res.render('shopping', { shopping: searchArray, fridge: fridgeArray[0], css: "/css/style.css" });
 });
-
-// app.get('/searchItem', async (req,res) => {
-
-//   const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
-//   res.render('searchItem', {fridge: fridgeArray[0], css: "/css/searchItem.css"});
-// })
 
 // =====Method to save new shoppingList into MongoDB===== Phuong CODE
 app.post('/searchItem', async (req, res) => {
   const input = req.body.search;
 
   let searchArray = [];
-  const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
+  const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
 
-  searchArray = await shoppingListCollection.find({name: input}).toArray();
+  searchArray = await shoppingListCollection.find({ name: input }).toArray();
   console.log("search by name: ", searchArray);
   //check if there is input in db that is equals to name
-  if(searchArray.length === 0){
-    searchArray = await shoppingListCollection.find({type: input}).toArray();
+  if (searchArray.length === 0) {
+    searchArray = await shoppingListCollection.find({ type: input }).toArray();
     //check if there is input in db that is equals to name
-    console.log("search by type ",searchArray);
+    console.log("search by type ", searchArray);
   }
   console.log(searchArray.length);
   /** If user input === name or type
    * 
    */
-    res.render('searchPage', {search: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
+  res.render('searchPage', {search: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
 });
 
 // =====Method to save new shoppingList into MongoDB=====
 app.post('/addList', async (req, res) => {
-    const listArray = await listCollection.find({owner: req.session.authenticated.email}).toArray();
-    const listID = listArray.length + 1;
-    const date = new Date().toLocaleDateString();
-    const owner = req.session.authenticated.email;
+  const listArray = await listCollection.find({ owner: req.session.authenticated.email }).toArray();
+  const listID = listArray.length + 1;
+  const date = new Date().toLocaleDateString();
+  const owner = req.session.authenticated.email;
 
-    const newList = {key: listID, date: date, owner: owner};
-    await listCollection.insertOne(newList);
-    res.redirect("/shoppingListPreview");
+  const newList = { key: listID, date: date, owner: owner };
+  await listCollection.insertOne(newList);
+  res.redirect("/shoppingListPreview");
 });
 
 // =====shoppingListPreview begins=====
-app.get('/shoppingListPreview', async(req,res) => {
-    if (!isValidSession(req)) {
-      res.redirect("/");
-      return;
-    }
-    const listArray = await listCollection.find({owner: req.session.authenticated.email}).toArray();
-    res.render("shoppingListPreview", {listArray, css: "/css/shoppingListPreview.css"});
+app.get('/shoppingListPreview', async (req, res) => {
+  if (!isValidSession(req)) {
+    res.redirect("/");
+    return;
+  }
+  const listArray = await listCollection.find({ owner: req.session.authenticated.email }).toArray();
+  res.render("shoppingListPreview", { listArray, css: "/css/shoppingListPreview.css" });
 })
 
 
