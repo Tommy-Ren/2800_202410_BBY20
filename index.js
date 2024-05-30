@@ -159,7 +159,7 @@ app.post('/signupSubmit', async (req, res) => {
 
   var hashedPassword = await bcrypt.hash(password, saltRounds);
 
-  await userCollection.insertOne({ name, email, password: hashedPassword, user_type: 'user', foodExpiry: false, appUpdate: false, getNews: false});
+  await userCollection.insertOne({ name, email, password: hashedPassword, user_type: 'user', foodExpiry: false, appUpdate: false, getNews: false });
 
   // Create session
   req.session.authenticated = {
@@ -636,7 +636,7 @@ app.post('/searchItem', async (req, res) => {
   /** If user input === name or type
    * 
    */
-  res.render('searchPage', {search: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
+  res.render('searchPage', { search: searchArray, fridge: fridgeArray[0], css: "/css/style.css" });
 });
 
 // =====Method to save new shoppingList into MongoDB=====
