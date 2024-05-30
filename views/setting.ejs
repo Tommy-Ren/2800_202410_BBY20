@@ -22,7 +22,7 @@
                             <input type="tel" id="phone" name="phone" placeholder="123-456-7890"
                                 pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxlength="12">
                             <input type="hidden" name="email" value="<%= user.email %>">
-                            <button class="round btn btn-info" id="fridgebutton">Save</button>
+                            <button style="margin-top: 20PX; height: 50px; font-size: 20px; font-weight: bold" class="round btn btn-info btn-lg">Save</button>
                         </form>
                     </div>
                     <% } %>
@@ -36,13 +36,13 @@
         </div>
         <br><br>
         <form action="/connection" method="get" class="d-grid gap-2 col-5 mx-auto">
-            <button class="round btn btn-info btn-lg" >Add Fridge</button>
+            <button style="height: 50px; font-size: 20px; font-weight: bold" class="round btn btn-info btn-lg" >Add Fridge</button>
         </form>
         <hr id="divider">
         <br><br>
         <p id="fridgelist"></p>
         <form action="/logout" method="get" class="d-grid gap-2 col-6 mx-auto">
-            <button style="color: white" class="round btn btn-info btn-lg" id="fridgebutton"><span class="glyphicon glyphicon-log-out"></span>Logout</button>
+            <button style="color: white; font-weight: bold" class="round btn btn-info btn-lg" id="fridgebutton"><span class="glyphicon glyphicon-log-out"></span>Logout</button>
         </form>
         <br><br><br><br>
     </div>
