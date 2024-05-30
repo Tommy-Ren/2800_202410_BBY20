@@ -137,6 +137,7 @@ li {
     height: 10vh;
     min-height: 70px;
     position: fixed;
+    z-index: 99;
 }
 
 #selectIngredients {
