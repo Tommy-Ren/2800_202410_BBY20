@@ -62,17 +62,15 @@
     </div>
 
     <script>
+        if (Notification.permission === "granted") {
+            document.getElementById("foodExpiry").checked = true;
+        }
         function handleNotificationChange(element) {
-            if (Notification.permission === "granted") {
-                element.checked = true;
-            } else if (Notification.permission === "denied") {
-                element.checked = false;
-            }
             if (element.checked) {
                 Notification.requestPermission().then(function (permission) {
                     if (permission === "granted") {
                         var notification = new Notification("Food Expiry Notification", {
-                            body: "The item <b>Crispy Garlic Soy Tofu</b> in your fridge will be expiry in 2 days!",
+                            body: "The item Crispy Garlic Soy Tofu in your fridge will be expiry in 2 days!",
                             icon: "image/logo.png"
                         });
                         alert("You have enabled notification " + Notification.permission);
@@ -82,6 +80,9 @@
                         alert("You have disabled notification " + Notification.permission);
                     }
                 });
+            }else{
+                Notification.permission = "denied";
+                alert("You have disabled notification " + Notification.permission);
             }
         }
     </script>
