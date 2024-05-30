@@ -21,7 +21,6 @@
                 </svg>
             </button>
         </form>
-
     </div>
 
     <div class="container">
@@ -29,7 +28,7 @@
         <ul>
             <% ingredients.forEach(ingredient=> { %>
                 <%- include("templates/ingredient", {ingredient}) %>
-            <% }) %>
+                    <% }) %>
         </ul>
         <div class="m-6"></div>
     </div>
@@ -38,9 +37,6 @@
         <button class="btn btn-primary btn-lg">Generate Recipes</button>
     </div>
 
-    <%- include("templates/navbar") %>
-    <script src="/js/recipe.js"></script>
+<%- include("templates/navbar") %>
+<script src="/js/recipe.js"></script>
 <%- include("templates/footer") %>
-
-
-
