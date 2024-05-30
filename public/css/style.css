@@ -226,9 +226,16 @@ li {
     height: 100%;
 }
 
-.barcode {
-    height: 50px;
-    margin-right: 20px;
+
+.searchItem {
+    width: 100vw;
+    height: auto;
+    margin-top: 20px;
+    justify-content: center;
+    align-items: flex-start;
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
 }
 
 .itemList {

@@ -46,6 +46,8 @@ app.set("view engine", "ejs");
 
 app.use(express.urlencoded({ extended: false }));
 
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(express.static(__dirname + "/public"));
 
 app.use(bodyParser.json());
@@ -61,10 +63,10 @@ const userCollection = db.collection('users');
 const itemColletion = db.collection('items');
 // const itemColletion2 = db.collection('newItems');
 const fridgeCollection = db.collection('fridge');
-const shopping = db.collection('shopping');
 const listCollection = db.collection('list');
+const shoppingListCollection = db.collection('shoppingList');
 const recipesCollection = db.collection('recipes');
-
+const searchCollection = db.collection('search');
 app.use(
   session({
     secret: node_session_secret,
@@ -117,6 +119,7 @@ app.get('/', (req, res) => {
     res.redirect("/home");
     return;
   }
+
   res.render("index", { authenticated: req.session.authenticated, name: req.session.authenticated?.name });
 });
 
@@ -126,6 +129,7 @@ app.get('/signup', (req, res) => {
     res.redirect("/home");
     return;
   }
+  
   res.render("signup", { css: "/css/login.css" });
 })
 
@@ -141,8 +145,13 @@ app.post('/signupSubmit', async (req, res) => {
 
   const validationResult = schema.validate({ name, email, password });
   if (validationResult.error != null) {
-    res.render("signupSubmit", { error: validationResult.error.details[0].message });
-    return;
+      if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
+          // Handle AJAX request
+          return res.json({ success: false });
+      } else {
+          // Handle regular form submission
+          return res.render("signupSubmit", { error: validationResult.error.details[0].message });
+      }
   }
 
   var hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -156,10 +165,16 @@ app.post('/signupSubmit', async (req, res) => {
   };
   req.session.user_type = 'user';
   req.session.cookie.maxAge = expireTime;
-
-  res.redirect("/connection");
+  if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
+    // Handle AJAX request
+    return res.json({ success: true });
+  } else {
+    // Handle regular form submission
+    return res.redirect("/connection");
+  }
 });
 
+// =====login page begins=====
 app.get('/login', (req, res) => {
   if (req.session.authenticated) {
     res.redirect("/home");
@@ -190,8 +205,12 @@ app.post("/loggingin", async (req, res) => {
     .project({ name: 1, email: 1, password: 1, _id: 1, user_type: 1 })
     .toArray();
   if (result.length != 1) {
-    res.render("loggingin", { error: "User not found" });
-    return;
+    if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
+      return res.json({ success: false });
+    } else {
+      // Handle regular form submission
+      return res.render("loggingin", { error: "User not found" });
+    }
   }
   if (await bcrypt.compare(password, result[0].password)) {
     req.session.authenticated = {
@@ -200,19 +219,30 @@ app.post("/loggingin", async (req, res) => {
     };
     req.session.user_type = result[0].user_type;
     req.session.cookie.maxAge = expireTime;
-    res.redirect("/home");
-    return;
+    if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
+      // Handle AJAX request
+      return res.json({ success: true });
+    } else {
+      // Handle regular form submission
+      return res.redirect("/home");
+    }
   } else {
-    res.render("loggingin", { error: "Incorrect password" });
-    return;
+    if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
+      // Handle AJAX request
+      return res.json({ success: false });
+    } else {
+      // Handle regular form submission
+      return res.render("loggingin", { error: "Incorrect password" });
+    }
   }
-
 });
 
 // =====connection page begins=====
 app.get('/connection', (req, res) => {
   res.render('connection', { css: "/css/connection.css" });
+  
 })
+
 
 // =====instruction page begins=====
 app.get('/instruction', (req, res) => {
@@ -387,6 +417,8 @@ app.get('/home', async (req, res) => {
     return;
   }
 
+
+
   const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
   if (fridgeArray.length === 0) {
     res.redirect("/connection");
@@ -435,6 +467,7 @@ app.get('/list', sessionValidation, async (req, res) => {
   res.render("list", { fridge, ingredients: fridgeItems });
 });
 
+// =====recipes page begins=====
 app.get('/recipes', sessionValidation, async (req, res) => {
   const recipes = await recipesCollection.find().toArray();
   let numRecipes = Math.floor(Math.random() * 11);
@@ -450,9 +483,9 @@ app.get('/recipes', sessionValidation, async (req, res) => {
   res.render("recipes", { recipes: tailoredRecipes });
 });
 
+// =====eachRecipe page begins=====
 app.get('/eachRecipe', sessionValidation, async (req, res) => {
   const { _id } = req.query;
-
   try {
     const recipe = await recipesCollection.findOne({
       _id: new ObjectId(_id),
@@ -463,7 +496,6 @@ app.get('/eachRecipe', sessionValidation, async (req, res) => {
       res.render("404", { statusCode: res.statusCode });
       return;
     }
-
     res.render("eachRecipe", { recipe });
   } catch (error) { return; }
 });
@@ -534,18 +566,40 @@ app.get('/shopping', async (req, res) => {
     }
 
     const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
-    const shoppingArray = await shopping.find().toArray();
-    let shoppingItems = [];
-    while (shoppingItems.length < 3) {
-        let item = shoppingArray[Math.floor(Math.random() * shoppingArray.length)];
-        if (!shoppingItems.includes(item)) {
-          shoppingItems.push(item);
-        }
-    }
-    res.render('shopping', {shopping: shoppingItems, fridge: fridgeArray[0], css: "/css/style.css"});
+    const searchArray = await searchCollection.find({owner: req.session.authenticated.email}).toArray();
+    res.render('shopping', {shopping: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
 });
 
-// =====Method to save new fridge into MongoDB=====
+app.get('/searchItem', async (req,res) => {
+
+  const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
+  res.render('searchItem', {fridge: fridgeArray[0], css: "/css/searchItem.css"});
+})
+
+// =====Method to save new shoppingList into MongoDB===== Phuong CODE
+app.post('/searchItem', async (req, res) => {
+  const input = req.body.search;
+
+  let searchArray = [];
+  const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
+
+  searchArray = await shoppingListCollection.find({name: input}).toArray();
+  console.log("search by name: ", searchArray);
+  //check if there is input in db that is equals to name
+  if(searchArray.length === 0){
+    searchArray = await shoppingListCollection.find({type: input}).toArray();
+    //check if there is input in db that is equals to name
+    console.log("search by type ",searchArray);
+  }
+  console.log(searchArray.length);
+  /** If user input === name or type
+   * 
+   */
+
+    res.render('searchItem', {search: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
+});
+
+// =====Method to save new shoppingList into MongoDB=====
 app.post('/addList', async (req, res) => {
     const listArray = await listCollection.find({owner: req.session.authenticated.email}).toArray();
     const listID = listArray.length + 1;
@@ -563,10 +617,11 @@ app.get('/shoppingListPreview', async(req,res) => {
       res.redirect("/");
       return;
     }
-
     const listArray = await listCollection.find({owner: req.session.authenticated.email}).toArray();
-    res.render("shoppingListPreview", {lists: listArray, css: "/css/shoppingListPreview.css"});
+    res.render("shoppingListPreview", {listArray, css: "/css/shoppingListPreview.css"});
 })
+
+
 
 // =====404 page begins=====
 app.get("*", (req, res) => {
@@ -575,6 +630,8 @@ app.get("*", (req, res) => {
     statusCode: res.statusCode,
   });
 });
+
+
 
 app.listen(port, () => {
   console.log("Node application listening on port " + port);

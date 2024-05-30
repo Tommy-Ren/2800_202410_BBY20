@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // Your Firebase configuration
 const firebaseConfig = {
@@ -13,40 +13,65 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth();
-const provider = new GoogleAuthProvider();
+const auth = getAuth(); 
+const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
 
 document.addEventListener('DOMContentLoaded', () => {
-    
-    // Add event listener to the Google Login button
-    document.getElementById('login-google').addEventListener('click', () => {
-        setTimeout(() => {
-            signInWithPopup(auth, provider)
-            .then((result) => {
-                // This gives you a Google Access Token. You can use it to access the Google API.
-                const credential = GoogleAuthProvider.credentialFromResult(result);
-                const token = credential.accessToken;
-                
-                // The signed-in user info.
-                const user = result.user;
-                const email = user.email;
-                const pass = "freshstock" // Default Password for Google sign-ins
 
-                // Send the user data to your server
-                fetch('/loggingin', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        password: pass 
-                    })
+    // Function to handle signup with popup and retry logic
+    function logInAndRetry(provider, delay) {
+        signInWithPopup(auth, provider)
+        .then((result) => {
+
+            // Gives the Google or Facebook Access Token
+            const credential = provider === googleProvider 
+                ? GoogleAuthProvider.credentialFromResult(result)
+                : FacebookAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            
+            // The signed-in user info.
+            const user = result.user;
+            const email = user.email;
+            const pass = user.password || "freshstock"; // Default Password for Google signup
+
+            // Send the user data to your server
+            fetch('/loggingin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: pass 
                 })
-            }).then(() => {
-                // Redirect to the connection page
-                window.location.href = "/home";
-            });
-        }, 500);
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = "/home"; // Redirect to homePage if success
+                } else {
+                    alert("User not found");
+                }
+            })
+        })
+        .catch((error) => {
+            if (error.code === 'auth/popup-closed-by-user') {
+                setTimeout(() => {
+                    logInAndRetry(provider, delay);
+                }, delay)
+            }
+        });
+    }
+
+    // Add event listener to the Google Sign Up button
+    document.getElementById('login-google').addEventListener('click', () => {
+        logInAndRetry(googleProvider, 1000)
+    });
+
+    // Add event listener to the Facebook Sign Up button
+    document.getElementById('login-facebook').addEventListener('click', () => {
+        logInAndRetry(facebookProvider, 1000)
     });
 });
