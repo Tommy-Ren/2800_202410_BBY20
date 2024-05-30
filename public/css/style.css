@@ -229,7 +229,7 @@ li {
 
 .searchItem {
     width: 100vw;
-    height: auto;
+    height: 700px;
     margin-top: 20px;
     justify-content: center;
     align-items: flex-start;
