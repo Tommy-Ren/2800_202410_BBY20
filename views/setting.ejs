@@ -1,40 +1,50 @@
 <%- include("templates/header") %>
-        <p id="fridgelist">Personal Profile</p>    
+    <div class="container">
+        <h2 id="fridgelist">Personal Profile</h2>
         <div class="user-info">
-            <p><span>Name: </span><%= user.name %></p>
-            <p><span>Email: </span><%= user.email %></p>
-            <p><span>User Type: </span><%= user.user_type %></p>
-            <% if (user.phone !== 'undefined' && user.phone) { %>
-                <p><span>Phone Number: </span><%= user.phone %></p>
-            <% } else { %>
-                <div class="inputs">
-                    <span>Phone Number (optional): </span>
-                    <form action="/savePhone" method="post">
-                        <input type="tel" id="phone" name="phone" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxlength="12">
-                        <input type="hidden" name="email" value="<%= user.email %>">
-                        <button class="btn btn-secondary" id="fridgebutton">Save</button>
-                    </form>
-                </div>
-            <% } %>
+            <p><span>Name: </span>
+                <%= user.name %>
+            </p>
+            <p><span>Email: </span>
+                <%= user.email %>
+            </p>
+            <p><span>User Type: </span>
+                <%= user.user_type %>
+            </p>
+            <% if (user.phone !=='undefined' && user.phone) { %>
+                <p><span>Phone Number: </span>
+                    <%= user.phone %>
+                </p>
+                <% } else { %>
+                    <div class="inputs">
+                        <span>Phone Number (optional): </span>
+                        <form action="/savePhone" method="post">
+                            <input type="tel" id="phone" name="phone" placeholder="123-456-7890"
+                                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxlength="12">
+                            <input type="hidden" name="email" value="<%= user.email %>">
+                            <button class="btn btn-secondary" id="fridgebutton">Save</button>
+                        </form>
+                    </div>
+                    <% } %>
         </div>
         <hr id="divider">
         <p id="fridgelist">List of fridge</p>
         <div class="row mb-3 text-left">
-            <% for(let i = 0; i < fridgeList.length; i++) { %>
-                <%- include('templates/fridge', {fridge: fridgeList[i]}) %> 
-            <% } %>
+            <% for(let i=0; i < fridgeList.length; i++) { %>
+                <%- include('templates/fridge', {fridge: fridgeList[i]}) %>
+                    <% } %>
         </div>
         <form action="/connection" method="get">
             <button class="btn btn-secondary" id="fridgebutton">Add Fridge</button>
         </form>
         <hr id="divider">
-        
+
         <p id="fridgelist">Logout</p>
         <form action="/logout" method="get">
             <button class="btn btn-secondary" id="fridgebutton">Logout</button>
         </form>
         <br><br><br><br>
     </div>
-    
+
 <%- include("templates/navbar") %>
 <%- include("templates/footer") %>

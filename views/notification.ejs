@@ -1,0 +1,63 @@
+<%- include("templates/header") %>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8 mx-auto">
+                <h2 class="mb-0 mt-5"><b>Notification</b></h2>
+                <p>Select notification you want to receive</p>
+                <hr class="my-4" />
+                <strong class="mb-1">Application</strong>
+                <p></p>
+                <div class="list-group mb-2 shadow">
+                    <div class="list-group-item">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <strong class="mb-0">Food Expiry Notifications</strong>
+                                <p class="text-muted mb-0">Send me message when my food is nearly expiry.</p>
+                            </div>
+                            <div class="col-auto">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="foodExpiry"/>
+                                    <label class="custom-control-label" for="foodExpiry"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="my-4" />
+                <strong class="mb-1">System</strong>
+                <p></p>
+                <div class="list-group mb-5 shadow">
+                    <div class="list-group-item">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <strong class="mb-0">Features and Updates</strong>
+                                <p class="text-muted mb-0">Notify me about new features and updates new version.</p>
+                            </div>
+                            <div class="col-auto">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="appUpdate" />
+                                    <label class="custom-control-label" for="appUpdate"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <strong class="mb-0">Latest News</strong>
+                                <p class="text-muted mb-0">Notify me by email for latest news.</p>
+                            </div>
+                            <div class="col-auto">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="getNews" />
+                                    <label class="custom-control-label" for="getNews"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<%- include("templates/navbar") %>
+<%- include("templates/footer") %>

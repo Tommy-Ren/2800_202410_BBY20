@@ -30,7 +30,7 @@
     </div>
     <div class="list-container">
         <ul>
-            <% lists.forEach(list => { %>
+            <% listArray.forEach(list => { %>
                 <%- include("templates/list", {list}) %>
             <% }) %>
         </ul>
@@ -38,10 +38,7 @@
 
     <script>
         document.querySelector('.toggle').addEventListener('dblclick', function() {
-                
-            var slider = document.querySelector('.slider');
-                
-                
+            var slider = document.querySelector('.slider');      
             var div = document.querySelector('.easterEggChange');
             var newText = div.innerHTML.replace('Shopping List', 'Fun, right babe? 😘');
             div.innerHTML = newText;
