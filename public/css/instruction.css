@@ -39,23 +39,23 @@
     width: 70vw;
 }
 #instruction1 {
-    margin-top: 18px;
+    margin-top: 5%;
 }
 
 #instruction2 {
-    margin-top: 26px;
+    margin-top: 20%;
 }
 
 #instruction3 {
-    margin-top: 43px;
+    margin-top: 15%;
 }
 
 #num2 {
-    margin-top: 25px;
+    margin-top: 35%;
 }
 
 #num3{
-    margin-top: 16px;
+    margin-top: 20%;
 }
 
 .btn{
@@ -64,7 +64,7 @@
     width: 10rem;
 }
 .continue{
-    margin-top: 360px;
+    margin-top: 90%;
     text-align: center;
 }
 

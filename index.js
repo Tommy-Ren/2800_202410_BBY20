@@ -467,6 +467,18 @@ app.get('/list', sessionValidation, async (req, res) => {
   res.render("list", { fridge, ingredients: fridgeItems });
 });
 
+// =====Method to save new fridge into MongoDB=====
+app.post('/saveFridge', async (req, res) => {
+  const fridgeName = req.body.fridgeName;
+  const ranFridge = Math.floor(Math.random() * 16 + 1);
+  const fridgeUrl = `${ranFridge}.png`
+  const owner = req.session.authenticated.email;
+
+  const newFridge = { name: fridgeName, url: fridgeUrl, owner: owner };
+  await fridgeCollection.insertOne(newFridge);
+  res.redirect("/home");
+});
+
 // =====recipes page begins=====
 app.get('/recipes', sessionValidation, async (req, res) => {
   const recipes = await recipesCollection.find().toArray();
