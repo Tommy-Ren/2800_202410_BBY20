@@ -230,14 +230,17 @@ li {
 
 .searchItem {
     width: 100vw;
-    height: auto;
+    height: 700px;
     margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
     justify-content: center;
     align-items: flex-start;
-    display: none;
+    /* display: none; */
     flex-direction: column;
     overflow-y: auto;
 }
+
 
 .itemList {
     width: 100vw;

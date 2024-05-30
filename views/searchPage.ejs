@@ -22,15 +22,19 @@
     </div>
     <div class="searchItem">
         <ul>
-
+            <% search.forEach(item => { %>
+                <%- include("templates/searchItem", {item}) %>
+            <% }) %>
         </ul>
     </div>
-
-
-
     <div class="addButton">
-        <button class="btn btn-secondary" id="done">Done</button>
-
+        <%if(search.length >0) { %>
+            <form>
+                <button class="btn btn-secondary" id="done">Done</button>
+            </form>
+        <%} else{ %>
+            <div></div>
+        <% }%>
 
     </div>
 <%- include("templates/navbar") %>

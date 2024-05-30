@@ -46,7 +46,7 @@ app.set("view engine", "ejs");
 
 app.use(express.urlencoded({ extended: false }));
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(__dirname + "/public"));
 
@@ -566,11 +566,11 @@ app.get('/shopping', async (req, res) => {
     res.render('shopping', {shopping: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
 });
 
-app.get('/searchItem', async (req,res) => {
+// app.get('/searchItem', async (req,res) => {
 
-  const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
-  res.render('searchItem', {fridge: fridgeArray[0], css: "/css/searchItem.css"});
-})
+//   const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
+//   res.render('searchItem', {fridge: fridgeArray[0], css: "/css/searchItem.css"});
+// })
 
 // =====Method to save new shoppingList into MongoDB===== Phuong CODE
 app.post('/searchItem', async (req, res) => {
@@ -591,8 +591,7 @@ app.post('/searchItem', async (req, res) => {
   /** If user input === name or type
    * 
    */
-
-    res.render('searchItem', {search: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
+    res.render('searchPage', {search: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
 });
 
 // =====Method to save new shoppingList into MongoDB=====
