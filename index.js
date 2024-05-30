@@ -456,6 +456,15 @@ app.get(`/eachRecipe`, async (req, res) => {
 
 });
 
+// =====Notification page begins=====
+app.get('/notification', async (req, res) => {
+  if (!isValidSession(req)) {
+    res.redirect("/");
+    return;
+  }
+  res.render("notification");
+});
+
 // =====Setting page begins=====
 app.get('/setting', async (req, res) => {
   if (!isValidSession(req)) {
