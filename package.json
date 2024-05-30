@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
     "connect-mongo": "^5.1.0",
     "csv-parse": "^5.5.6",
     "dotenv": "^16.4.5",
@@ -17,10 +18,12 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "firebase": "^10.12.2",
+    "firebase-admin": "^12.1.1",
     "fs": "^0.0.1-security",
     "joi": "^17.13.1",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.6.2",
-    "nodemailer": "^6.9.13"
+    "nodemailer": "^6.9.13",
+    "nodemon": "^3.1.1"
   }
 }

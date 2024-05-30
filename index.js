@@ -7,6 +7,7 @@ const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const ObjectId = require("mongodb").ObjectId;
 const nodemailer = require("nodemailer");
+const bodyParser = require('body-parser');
 const saltRounds = 12;
 
 const port = 3000;
@@ -45,7 +46,11 @@ app.set("view engine", "ejs");
 
 app.use(express.urlencoded({ extended: false }));
 
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(express.static(__dirname + "/public"));
+
+app.use(bodyParser.json());
 
 var mongoStore = MongoStore.create({
   mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/sessions`,
@@ -56,12 +61,12 @@ var mongoStore = MongoStore.create({
 const db = database.db(mongodb_database)
 const userCollection = db.collection('users');
 const itemColletion = db.collection('items');
-const itemColletion2 = db.collection('newItems');
+// const itemColletion2 = db.collection('newItems');
 const fridgeCollection = db.collection('fridge');
-const shopping = db.collection('shopping');
 const listCollection = db.collection('list');
 const shoppingListCollection = db.collection('shoppingList');
-
+const recipesCollection = db.collection('recipes');
+const searchCollection = db.collection('search');
 app.use(
   session({
     secret: node_session_secret,
@@ -114,6 +119,7 @@ app.get('/', (req, res) => {
     res.redirect("/home");
     return;
   }
+
   res.render("index", { authenticated: req.session.authenticated, name: req.session.authenticated?.name });
 });
 
@@ -123,6 +129,7 @@ app.get('/signup', (req, res) => {
     res.redirect("/home");
     return;
   }
+  
   res.render("signup", { css: "/css/login.css" });
 })
 
@@ -157,6 +164,7 @@ app.post('/signupSubmit', async (req, res) => {
   res.redirect("/connection");
 });
 
+// =====login page begins=====
 app.get('/login', (req, res) => {
   if (req.session.authenticated) {
     res.redirect("/home");
@@ -209,7 +217,9 @@ app.post("/loggingin", async (req, res) => {
 // =====connection page begins=====
 app.get('/connection', (req, res) => {
   res.render('connection', { css: "/css/connection.css" });
+  
 })
+
 
 // =====instruction page begins=====
 app.get('/instruction', (req, res) => {
@@ -384,6 +394,8 @@ app.get('/home', async (req, res) => {
     return;
   }
 
+
+
   const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
   if (fridgeArray.length === 0) {
     res.redirect("/connection");
@@ -432,11 +444,23 @@ app.get('/list', sessionValidation, async (req, res) => {
   res.render("list", { fridge, ingredients: fridgeItems });
 });
 
-// =====Recipe page begins=====
-app.get('/recipe', async (req, res) => {
-  res.render('recipe', { css: "/css/recipe.css" });
+// =====recipes page begins=====
+app.get('/recipes', async (req, res) => {
+  const recipes = await recipesCollection.find().toArray();
+  let numRecipes = Math.floor(Math.random() * 11);
+
+  let tailoredRecipes = [];
+  while (tailoredRecipes.length < numRecipes) {
+    let recipe = recipes[Math.floor(Math.random() * recipes.length)];
+    if (!tailoredRecipes.includes(recipe)) {
+      tailoredRecipes.push(recipe);
+    }
+  }
+
+  res.render("recipes", { recipes: tailoredRecipes });
 });
 
+// =====eachRecipe page begins=====
 app.get(`/eachRecipe`, async (req, res) => {
 
   res.render("eachRecipe");
@@ -500,28 +524,37 @@ app.get('/shopping', async (req, res) => {
     }
 
     const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
-    // const shoppingArray = await shopping.find().toArray();
-    // let shoppingItems = [];
-    // while (shoppingItems.length < 3) {
-    //     let item = shoppingArray[Math.floor(Math.random() * shoppingArray.length)];
-    //     if (!shoppingItems.includes(item)) {
-    //       shoppingItems.push(item);
-    //     }
-    // }
-    
-    res.render('shopping', {shopping: shoppingArray, fridge: fridgeArray[0], css: "/css/style.css"});
+    const searchArray = await searchCollection.find({owner: req.session.authenticated.email}).toArray();
+    res.render('shopping', {shopping: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
 });
 
+app.get('/searchItem', async (req,res) => {
 
+  const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
+  res.render('searchItem', {fridge: fridgeArray[0], css: "/css/searchItem.css"});
+})
 
 // =====Method to save new shoppingList into MongoDB===== Phuong CODE
 app.post('/searchItem', async (req, res) => {
-  const input = req.query.search;
-  const searchArray = await shoppingListCollection.find(i => i.name == input || i.type == input).toArray();
+  const input = req.body.search;
+
+  let searchArray = [];
+  const fridgeArray = await fridgeCollection.find({owner: req.session.authenticated.email}).toArray();
+
+  searchArray = await shoppingListCollection.find({name: input}).toArray();
+  console.log("search by name: ", searchArray);
+  //check if there is input in db that is equals to name
+  if(searchArray.length === 0){
+    searchArray = await shoppingListCollection.find({type: input}).toArray();
+    //check if there is input in db that is equals to name
+    console.log("search by type ",searchArray);
+  }
+  console.log(searchArray.length);
   /** If user input === name or type
    * 
    */
-    res.render('search', {search: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
+
+    res.render('searchItem', {search: searchArray, fridge: fridgeArray[0], css: "/css/style.css"});
 });
 
 // =====Method to save new shoppingList into MongoDB=====
