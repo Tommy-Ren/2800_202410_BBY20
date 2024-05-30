@@ -1,0 +1,43 @@
+<%- include("templates/header") %>
+    <div class="navtop d-flex align-items-center justify-content-end">
+        <p class="text-nowrap" id="fridgename">
+            <%= fridge.name %>
+        </p>
+
+        <form class="mx-3" action="" method="get">
+            <button class="btn btn-primary" id="selectIngredients">Select</button>
+        </form>
+        <form action="/home" method="get">
+            <input type="hidden" name="name" value="<%= fridge.name %>">
+            <button class="btn btn-secondary" id="slasheye">
+                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor"
+                    class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
+                    <path
+                        d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"
+                        stroke="black"></path>
+                    <path
+                        d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"
+                        stroke="black"></path>
+                </svg>
+            </button>
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="m-10"></div>
+        <ul>
+            <% ingredients.forEach(ingredient=> { %>
+                <%- include("templates/ingredient", {ingredient}) %>
+                    <% }) %>
+        </ul>
+        <div class="m-6"></div>
+    </div>
+
+    <div id="generateRecipes" class="fixed-bottom text-center mb-3" style="display: none;">
+        <a href="/donation"><button class="btn btn-primary btn-lg">Donation</button></a>
+        <button class="btn btn-primary btn-lg" style="margin-left: 20px">Generate Recipes</button>
+    </div>
+
+<%- include("templates/navbar") %>
+<script src="/js/recipe.js"></script>
+<%- include("templates/footer") %>

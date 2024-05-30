@@ -1,0 +1,63 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css");
+
+img {
+  height: auto;
+  max-width: 100%;
+}
+
+.small-receipe-area {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 30px;
+}
+
+.single-small-receipe-area {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 50px;
+}
+
+.single-small-receipe-area .receipe-thumb {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 100px;
+  flex: 0 0 100px;
+  max-width: 100px;
+  width: 100px;
+  padding-right: 20px;
+}
+
+.single-small-receipe-area .receipe-content span {
+  font-size: 12px;
+  display: block;
+  color: #40ba37;
+}
+
+.single-small-receipe-area .receipe-content a {
+  display: block;
+}
+
+.single-small-receipe-area .receipe-content a h5 {
+  color: #474747;
+  font-size: 18px;
+  margin-bottom: 5px;
+  -webkit-transition-duration: 500ms;
+  transition-duration: 500ms;
+}
+
+.single-small-receipe-area .receipe-content a h5:hover,
+.single-small-receipe-area .receipe-content a h5:focus {
+  color: #40ba37;
+}
+
+.single-small-receipe-area .receipe-content .ratings i {
+  font-size: 11px;
+  color: #fbb710;
+  display: inline-block;
+  padding: 0 1px;
+}
+
+.single-small-receipe-area .receipe-content p {
+  font-size: 12px;
+  margin-bottom: 0;
+  color: #9b9b9b;
+}

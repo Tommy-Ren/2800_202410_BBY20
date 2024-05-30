@@ -1,0 +1,95 @@
+<%- include("templates/header") %>
+
+<form class="container" action="/donation" method="post">
+    <div class="mb-3">
+        <label for="fullName" class="form-label">Name</label>
+        <input type="text" class="form-control" name="fullName" placeholder="Full Name" value="<%= authenticated.name %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email Address</label>
+        <input type="email" class="form-control" name="email" placeholder="Email Address" value="<%= authenticated.email %>" required>
+    </div>
+
+    <div id="map" style="height: 30vh;"></div>
+    <input type="hidden" name="foodBankId" id="foodBankId">
+
+    <div id="foodItems">
+        <div class="food-item row mb-3">
+            <div class="col-6">
+                <label for="foodType" class="form-label">Type of Food</label>
+                <input type="text" class="form-control" name="foodType[]" placeholder="Type of Food" required>
+            </div>
+            <div class="col-4">
+                <label for="quantity" class="form-label">Quantity</label>
+                <input type="text" class="form-control" name="quantity[]" placeholder="Quantity" required>
+            </div>
+            <div class="col-2 d-flex align-items-end">
+                <button type="button" class="btn btn-danger btn-remove-food-item"><i class="bi bi-trash"></i></button>
+            </div>
+            <div class="">
+                <label for="expirationDate" class="form-label">Expiration Date (if applicable)</label>
+                <input type="date" class="form-control" name="expirationDate[]">
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-secondary mb-3" id="addFoodItem">Add Food Item</button>
+    <div class="mb-3">
+        <label for="deliveryDate" class="form-label">Preferred Delivery/Pickup Date</label>
+        <input type="date" class="form-control" name="deliveryDate" required>
+    </div>
+    <div class="mb-3">
+        <label for="deliveryTime" class="form-label">Preferred Delivery/Pickup Time</label>
+        <input type="time" class="form-control" name="deliveryTime" required>
+    </div>
+    <div class="mb-3">
+        <label for="additionalInfo" class="form-label">Additional Information/Comments</label>
+        <textarea class="form-control" name="additionalInfo" rows="3" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<div id="map" style="height: 35vh;"></div>
+
+<%- include("templates/navbar") %>
+
+<script>
+    document.getElementById('addFoodItem').addEventListener('click', function () {
+        var foodItemsDiv = document.getElementById('foodItems');
+        var newFoodItem = document.createElement('div');
+        newFoodItem.classList.add('food-item', 'row', 'mb-3');
+        newFoodItem.innerHTML = `
+            <div class="col-6">
+                <label for="foodType" class="form-label">Type of Food</label>
+                <input type="text" class="form-control" name="foodType[]" placeholder="Type of Food">
+            </div>
+            <div class="col-4">
+                <label for="quantity" class="form-label">Quantity</label>
+                <input type="text" class="form-control" name="quantity[]" placeholder="Quantity">
+            </div>
+            <div class="col-2 d-flex align-items-end">
+                <button type="button" class="btn btn-danger btn-remove-food-item"><i class="bi bi-trash"></i></button>
+            </div>
+            <div class="">
+                <label for="expirationDate" class="form-label">Expiration Date (if applicable)</label>
+                <input type="date" class="form-control" name="expirationDate[]">
+            </div>
+        `;
+        foodItemsDiv.appendChild(newFoodItem);
+
+        // Add event listener for the new delete button
+        newFoodItem.querySelector('.btn-remove-food-item').addEventListener('click', function () {
+            newFoodItem.remove();
+        });
+    });
+
+    // Add event listener for the initial delete button
+    document.querySelectorAll('.btn-remove-food-item').forEach(button => {
+        button.addEventListener('click', function () {
+            button.closest('.food-item').remove();
+        });
+    });
+</script>
+
+<script src="/js/donation.js"></script>
+
+<%- include("templates/footer") %>

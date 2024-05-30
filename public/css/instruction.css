@@ -1,0 +1,70 @@
+#ready{
+    display: block;
+    text-align: center;
+    font-size: 1.9rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+.description{
+    display: inline-block;
+    font-size: 1.5rem;
+}
+
+.circle {
+    float: left;
+}
+
+.cover {
+    margin-top: 1.5rem;
+    position: absolute; 
+    z-index:2;
+}
+
+.num-content{
+    position: absolute; 
+    z-index:1; 
+}
+
+.content{
+    margin-top: 1.5rem;
+    /* position: absolute; 
+    z-index:1;  */
+    margin-left:70px;
+    display: inline-block;
+    margin-right:auto;
+}
+
+.instruction-img{
+    width: 70vw;
+}
+#instruction1 {
+    margin-top: 5%;
+}
+
+#instruction2 {
+    margin-top: 20%;
+}
+
+#instruction3 {
+    margin-top: 15%;
+}
+
+#num2 {
+    margin-top: 35%;
+}
+
+#num3{
+    margin-top: 20%;
+}
+
+.btn{
+    font-size: 1.8rem;
+    height: 4rem;
+    width: 10rem;
+}
+.continue{
+    margin-top: 90%;
+    text-align: center;
+}
+

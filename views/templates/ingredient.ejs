@@ -1,0 +1,21 @@
+<li>
+    <div class="form-check d-flex align-items-center">
+        <div class="col-10 d-inline-flex">
+            <label class="form-check-label d-inline-flex">
+                <img src="/image/items/<%= ingredient.url %>" class="img-fluid w-50">
+                <div class="ms-2">
+                    <h3 class=""><%= ingredient.name %></h3>
+                    <% if (ingredient.cooked === "yes") { %>
+                        <p>Time in the fridge: <%= ingredient.expiredDate %></p>
+                    <% } else { %>
+                        <p>Expired Date: <%= ingredient.expiredDate %></p>
+                    <% } %>
+                    <p>Quantity: <%= ingredient.quantity %></p>
+                </div>
+            </label>
+        </div>
+        <div class="">
+            <input class="form-check-input ingredient" type="checkbox" value="<%= ingredient.name %>" style="width:1.5rem;height:1.5rem" hidden>
+        </div>
+    </div>
+</li>
