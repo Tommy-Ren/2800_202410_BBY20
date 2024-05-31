@@ -71,12 +71,16 @@
             <% }) %>
 
                 <div class="add my-2 d-grid gap-2 col-8 mx-auto">
-                    <button class="btn btn-light border rounded-pill"><i class="bi bi-plus-circle">&nbsp</i>Add to
-                        Shopping List</button>
+                    <form action="/addList" method="post">
+                        <button class="btn btn-light border rounded-pill"><i class="bi bi-plus-circle">&nbsp</i>Add to
+                            Shopping List</button></a>
+                    </form>
                 </div>
                 <div class="view my-2 d-grid gap-2 col-8 mx-auto">
-                    <button class="btn btn-light border rounded-pill"><i class="bi bi-cart"></i>&nbspView Shopping
-                        List</button>
+                    <form action="/shoppingListPreview" method="get">
+                        <button class="btn btn-light border rounded-pill"><i class="bi bi-cart"></i>&nbspView Shopping
+                            List</button>
+                    </form>
                 </div>
 
         </div>

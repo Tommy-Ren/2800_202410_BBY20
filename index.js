@@ -661,18 +661,6 @@ app.post('/addSearch', async (req,res) => {
     res.redirect(`/searchItem?search=${input}`);
 });
 
-// =====Method to save new shoppingList into MongoDB=====
-app.post('/addList', async (req, res) => {
-    const listArray = await listCollection.find({owner: req.session.authenticated.email}).toArray();
-    const listID = listArray.length + 1;
-    const date = new Date().toLocaleDateString();
-    const owner = req.session.authenticated.email;
-
-    const fridgeArray = await fridgeCollection.find({ owner: req.session.authenticated.email }).toArray();
-    const searchArray = await searchCollection.find({ owner: req.session.authenticated.email }).toArray();
-    res.render('shopping', { shopping: searchArray, fridge: fridgeArray[0], css: "/css/style.css" });
-});
-
 // =====Method to save new shoppingList into MongoDB===== Phuong CODE
 app.post('/searchItem', async (req, res) => {
     const input = req.body.search;
