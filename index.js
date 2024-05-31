@@ -102,20 +102,6 @@ function isAdmin(req) {
   return false;
 }
 
-function adminAuthorization(req, res, next) {
-  if (!isAdmin(req)) {
-    res.status(403);
-    res.render("error", {
-      authenticated: req.session.authenticated,
-      statusCode: res.statusCode,
-      error: "Access Forbidden!",
-    });
-    return;
-  } else {
-    next();
-  }
-}
-
 // =====landing page begins=====
 app.get('/', (req, res) => {
   if (req.session.authenticated) {

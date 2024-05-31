@@ -13,7 +13,7 @@ Food waste is a good topic related to sustainability. We want to apply future te
 
 3.How does our web app work?
 
-First, you need to connect your app with your smart scanner in your fridge. The scanner will generate all information you need about items like expiry date, fresh index, quality, and even provide some receipt recommendations
+FreshStock can monitor all food in fridges that have connected to it. You can use whatever items in the fridge to generate recipes and send ingredients into shopping list.
 
 
 ## 2. About Us
@@ -87,43 +87,42 @@ Content of the project folder:
 
 ```
  Top level of project folder: 
-├── .gitignore               # Git ignore file
-├── 404.html                 # 404 Error page 
-├── favourite.html           # This is the page where users save their favourite posts and can be accessed by nav bar
-├── home_page.html           # Splash page after logging in. A newsfeed of all the popular deals and all posts
-├── index.html               # First page with our logo and the Start button
-├── login.html               # Used for login and registering new accounts. Accessible by clicking the Start button on our index page.
-├── map.html                 # Loads the Google Map API, this is where users can find grocery stores without switching out of the app. Accessible by clicking the Map button on posts.
-├── my_posts.html            # This is where users can check their own posts. Can be found via navbar -> my profile
-├── setting_page.html        # This is where users can update their profile, check their own posts, and log out to switch account. Can be accessed by clicking profile icon on the nav bar
-├── upload.html              # This is where users can create and upload their own posts. It can be accessed via navbar
+├── .git                        # Folder for git repo
+├── .gitignore                  # Git ignore file
+├── public                      # Folder for all public static resource
+├── views                       # Folder for views, including all ejs and html documents
+├── databaseConnection.js       # script for connecting to MongoDB
+├── index.js                    # script for all ajax and nodejs functionalities
+├── package.json                # package.json that has all packages needed for running this app
 └── README.md
 
 It has the following subfolders and files:
-├── .git                     # Folder for git repo
-├── old                      # archive for unused and experimental code
-├── images                   # Folder for images
-    /favicon.ico             # Taken from: https://icons8.com/icon/38824/meat
-    /IMG_4514.jpg            # Took picture myself at Safeway (Dominic)
-    /IMG_4515.jpg            # Took picture myself at Safeway (Dominic)
-    /IMG_4516.jpg            # Took picture myself at Safeway (Dominic)
-    /IMG_4517.jpg            # Took picture myself at Safeway (Dominic)
-    /IMG_4518.jpg            # Took picture myself at Safeway (Dominic)
-    /LOGO.svg                # SVG file provided by Tommy
-    /Savebites.jpg           # logo provided by Tommy
-├── scripts                  # Folder for scripts
-    /authentication.js       # script for firebase login
-    /createPosts.js          # script for creating post cards
-    /favourite.js            # script for the favourites page
-    /firebaseAPI_BBY12.js    # script for firebase credentials
-    /home_page_posts.js      # script for generating cards on home page
-    /map.js                  # script for loading google maps
-    /my_posts.js             # script for loading cards for posts uploaded by users themselves
-    /setting_page.js         # script for the profile page
-    /upload.js               # script for uploading new posts
-    /username_home.js        # script for customized home screen to show user name and address
-├── styles                   # Folder for styles
-    /style.css               # Font and Icon imports, media query size to iPhone 15 Pro Max, vanilla CSS adjustments 
+├── public                      
+    /css                        # Folder for all css
+    /image                      # Folder for all images
+    /js                         # Folder for all Javascrip scripts
+└── views
+    /templates                  # Folder for all components are reusable
+    /404.ejs                    # 404 Error page
+    /connection.ejs             # Front end for fridge connection
+    /connectSuccess.ejs         # Front end for connection successfully
+    /donation.ejs               # Front end for donation page
+    /forgetPassword.ejs         # Front end and back end for forget password page
+    /home.ejs                   # Front end for home page
+    /index.ejs                  # Front end for landing page
+    /instruction.ejs            # Front end for instruction page for connection
+    /list.ejs                   # Front end for items list page
+    /loggingin.ejs              # Back end for login page
+    /notification.ejs           # Front end and back end for notification page
+    /recipes.ejs                # Front end for recipes list page
+    /resetPassword.ejs          # Front end for password reset page
+    /searchPage.ejs             # Front end for shopping list's search engine page
+    /setting.ejs                # Front end for setting page
+    /shopping.ejs               # Front end for showing all shopping lists page
+    /shoppingPreview.ejs        # Front end for detailed content in the shopping list page
+    /signup.ejs                 # Front end for sign up page
+    /singupSubmit.ejs           # Back end for sign up page
+    /waiting.ejs                # Front end for connection waiting page
 
 
 ```
