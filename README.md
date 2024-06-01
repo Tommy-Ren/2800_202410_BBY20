@@ -1,5 +1,6 @@
 # Project Title
 FreshStock
+Hosted link: https://freshstock.onrender.com/ 
 
 
 ## 1. Project Description
